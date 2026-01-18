@@ -35,7 +35,12 @@ function escapeAttr(s){
 
 function money(n){
   const v = Math.round((Number(n) || 0) * 100) / 100;
-  return '€ ' + v.toFixed(v % 1 === 0 ? 0 : 2);
+  const isInt = Math.abs(v % 1) < 0.0000001;
+  const nf = new Intl.NumberFormat('nl-NL', {
+    minimumFractionDigits: isInt ? 0 : 2,
+    maximumFractionDigits: 2,
+  });
+  return '€' + nf.format(v);
 }
 
 function loadProducts(){
@@ -117,24 +122,25 @@ function renderCards(products){
       count += 1;
       const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encodeURIComponent(code)}`;
 
-      const photoHtml = showPhoto ? `<img class="qrPhoto" src="${escapeAttr(p.photo)}" alt="" />` : '';
-      const nameHtml = showName ? `<div class="qrName">${escapeHtml(p.name)}</div>` : '';
-      const priceHtml = showPrice ? `<div class="qrPrice"><span aria-hidden="true">🏷️</span><span>${money(p.price)}</span></div>` : '';
+      const photoHtml = showPhoto && p.photo ? `
+        <div class="qrProductPhotoWrap" aria-hidden="true">
+          <img class="qrProductPhoto" src="${escapeAttr(p.photo)}" alt="" />
+        </div>
+      ` : '';
+
+      const nameHtml = showName ? `<div class="qrProductName">${escapeHtml(p.name)}</div>` : '';
+      const productHtml = (photoHtml || nameHtml) ? `<div class="qrProduct">${photoHtml}${nameHtml}</div>` : '';
+
+      const priceHtml = showPrice ? `<div class="qrPriceBox">${money(p.price)}</div>` : '';
 
       cards.push(`
         <div class="qrCard" data-size="${escapeAttr(size)}">
           <div class="qrImgWrap">
             <img class="qrImg" data-qr="1" data-code="${escapeAttr(code)}" src="${qrSrc}" alt="QR code ${escapeAttr(code)}" />
           </div>
-          <div class="qrMeta">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
-              <div>
-                ${nameHtml}
-                <div class="qrCode">Code, ${escapeHtml(code)}</div>
-              </div>
-              ${photoHtml}
-            </div>
+          <div class="qrBottom" aria-label="Productinformatie">
             ${priceHtml}
+            ${productHtml}
           </div>
         </div>
       `);
