@@ -146,9 +146,21 @@
   gap: 10px;
 }
 
-.cards[data-cols="2"]{ grid-template-columns: repeat(2, 1fr); }
-.cards[data-cols="3"]{ grid-template-columns: repeat(3, 1fr); }
-.cards[data-cols="4"]{ grid-template-columns: repeat(4, 1fr); }
+/*
+  Print tip
+  Browsers kunnen grid items soms alsnog over pagina's knippen.
+  Daarom maken we per rij een aparte wrapper (.qrRow) die als geheel
+  naar de volgende pagina kan doorschuiven.
+*/
+
+.qrRow{
+  display: grid;
+  gap: 10px;
+}
+
+.cards[data-cols="2"] .qrRow{ grid-template-columns: repeat(2, 1fr); }
+.cards[data-cols="3"] .qrRow{ grid-template-columns: repeat(3, 1fr); }
+.cards[data-cols="4"] .qrRow{ grid-template-columns: repeat(4, 1fr); }
 
 .qrCard{
   background: rgba(255,255,255,.78);
@@ -220,9 +232,90 @@
   .controls{ display:none; }
   .printMain{ padding: 0; max-width: none; }
   .sheet{ margin-top: 0; }
+  .sheetMeta{ display:none; }
+
+  /*
+    Print layout
+    Op papier is inline-block robuuster dan grid als het gaat om pagina-einden.
+    Zo blijft elke QR kaart heel en schuift een volledige rij door naar de volgende pagina.
+  */
+  html, body{
+    height: auto;
+    overflow: visible;
+  }
+
+  .cards{ display:block; }
+
+  .qrRow{
+    break-inside: avoid;
+    page-break-inside: avoid;
+    display: block;
+    margin: 0 0 10px 0;
+    font-size: 0;
+  }
   .qrCard{
     break-inside: avoid;
     page-break-inside: avoid;
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 10px 0 0;
   }
+  .qrRow .qrCard:last-child{ margin-right:0; }
+
+  .cards[data-cols="2"] .qrCard{ width: calc((100% - 10px) / 2); }
+  .cards[data-cols="3"] .qrCard{ width: calc((100% - 20px) / 3); }
+  .cards[data-cols="4"] .qrCard{ width: calc((100% - 30px) / 4); }
+
+  .printPage{
+    break-after: page;
+    page-break-after: always;
+  }
+  .printPage:last-child{
+    break-after: auto;
+    page-break-after: auto;
+  }
+
   @page{ margin: 10mm; }
 }
+
+/*
+  Force print styling on screen
+  Dit wordt gebruikt om exact te meten hoeveel rijen op een pagina passen
+  voordat de browser de printdialoog opent.
+*/
+.forcePrint .printTop{ display:none; }
+.forcePrint .controls{ display:none; }
+.forcePrint .printMain{ padding: 0; max-width: none; width: 210mm; margin: 0 auto; }
+.forcePrint .sheet{ margin-top: 0; width: 190mm; margin-left: auto; margin-right: auto; }
+.forcePrint .sheetMeta{ display:none; }
+
+.forcePrint html, .forcePrint body{
+  height: auto;
+  overflow: visible;
+}
+
+.forcePrint .cards{ display:block; }
+
+.forcePrint .qrRow{
+  break-inside: avoid;
+  page-break-inside: avoid;
+  display: block;
+  margin: 0 0 10px 0;
+  font-size: 0;
+}
+
+.forcePrint .qrCard{
+  break-inside: avoid;
+  page-break-inside: avoid;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 10px 0 0;
+}
+.forcePrint .qrRow .qrCard:last-child{ margin-right:0; }
+
+.forcePrint .cards[data-cols="2"] .qrCard{ width: calc((100% - 10px) / 2); }
+.forcePrint .cards[data-cols="3"] .qrCard{ width: calc((100% - 20px) / 3); }
+.forcePrint .cards[data-cols="4"] .qrCard{ width: calc((100% - 30px) / 4); }
+
+/* Pagina styling in schermweergave, print negeert dit */
+.printPage{ margin: 0 0 14px 0; }

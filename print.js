@@ -16,6 +16,10 @@ const sizeEl = $('#size');
 const printBtn = $('#printBtn');
 const closeBtn = $('#closeBtn');
 
+let paginateTimer = null;
+let isPaginating = false;
+
+
 function escapeHtml(s){
   return String(s ?? '')
     .replaceAll('&', '&amp;')
@@ -91,6 +95,7 @@ function selectedMap(){
 
 function renderCards(products){
   const cols = String(colsEl.value || '3');
+  const colsNum = Math.max(1, Math.min(6, Number.parseInt(cols, 10) || 3));
   const size = String(sizeEl.value || 'm');
   const showName = !!showNameEl.checked;
   const showPrice = !!showPriceEl.checked;
@@ -136,11 +141,19 @@ function renderCards(products){
     }
   }
 
-  cardsEl.innerHTML = cards.length ? cards.join('') : `
+  if (!cards.length) {
+    cardsEl.innerHTML = `
     <div class="card pad" style="background:rgba(255,255,255,.72); box-shadow:none">
       <p class="p" style="margin:0">Selecteer minstens één product en zet het aantal op 1 of hoger.</p>
     </div>
   `;
+  } else {
+    const rows = [];
+    for (let i = 0; i < cards.length; i += colsNum) {
+      rows.push(`<div class="qrRow">${cards.slice(i, i + colsNum).join('')}</div>`);
+    }
+    cardsEl.innerHTML = rows.join('');
+  }
 
   const today = new Date();
   const d = today.toLocaleDateString('nl-NL');
@@ -160,6 +173,95 @@ function renderCards(products){
       img.replaceWith(fallback);
     };
   });
+
+  schedulePagination();
+
+}
+
+
+function mmToPx(mm){
+  const div = document.createElement('div');
+  div.style.width = `${mm}mm`;
+  div.style.position = 'absolute';
+  div.style.left = '-1000mm';
+  div.style.top = '0';
+  div.style.visibility = 'hidden';
+  document.body.appendChild(div);
+  const px = div.getBoundingClientRect().width;
+  div.remove();
+  // Fallback in the unlikely case the browser returns 0
+  return px || (mm * 3.7795275591);
+}
+
+function unpaginate(){
+  const pages = [...cardsEl.querySelectorAll('.printPage')];
+  if (!pages.length) return;
+  const rows = [];
+  for (const page of pages) {
+    rows.push(...[...page.querySelectorAll(':scope > .qrRow')]);
+  }
+  cardsEl.innerHTML = '';
+  for (const row of rows) cardsEl.appendChild(row);
+}
+
+function calcRowsPerPageA4(){
+  const firstRow = cardsEl.querySelector('.qrRow');
+  if (!firstRow) return 0;
+
+  const rect = firstRow.getBoundingClientRect();
+  const cs = getComputedStyle(firstRow);
+  const mb = Number.parseFloat(cs.marginBottom || '0') || 0;
+  const rowTotal = rect.height + mb;
+
+  // A4 portrait, with @page margin 10mm on all sides
+  const printableHeightMm = 297 - 20;
+  const printableHeightPx = mmToPx(printableHeightMm);
+
+  return Math.max(1, Math.floor((printableHeightPx + 0.5) / rowTotal));
+}
+
+async function paginateForPrint(){
+  if (isPaginating) return;
+  isPaginating = true;
+
+  try {
+    unpaginate();
+    const rows = [...cardsEl.querySelectorAll('.qrRow')];
+    if (!rows.length) return;
+
+    // Force print styling on screen, so our measurements match the printed page
+    document.body.classList.add('forcePrint');
+
+    // Wait for layout to settle
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    const perPage = calcRowsPerPageA4();
+
+    // Wrap rows into pages
+    const frag = document.createDocumentFragment();
+    let page = null;
+
+    for (let i = 0; i < rows.length; i += 1) {
+      if (i % perPage == 0) {
+        page = document.createElement('div');
+        page.className = 'printPage';
+        frag.appendChild(page);
+      }
+      page.appendChild(rows[i]);
+    }
+
+    cardsEl.innerHTML = '';
+    cardsEl.appendChild(frag);
+
+  } finally {
+    document.body.classList.remove('forcePrint');
+    isPaginating = false;
+  }
+}
+
+function schedulePagination(){
+  if (paginateTimer) clearTimeout(paginateTimer);
+  paginateTimer = setTimeout(() => { paginateForPrint(); }, 60);
 }
 
 function wireUp(products){
@@ -177,7 +279,13 @@ function wireUp(products){
     if (t.matches('input.pick') || t.matches('input.qty')) rerender();
   });
 
-  printBtn.addEventListener('click', () => window.print());
+  printBtn.addEventListener('click', async () => {
+    await paginateForPrint();
+    window.print();
+  });
+
+  window.addEventListener('beforeprint', () => { paginateForPrint(); });
+  window.addEventListener('afterprint', () => { unpaginate(); });
 
   closeBtn.addEventListener('click', () => {
     try {
