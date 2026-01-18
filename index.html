@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#f6f2ea" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Kleuterwinkel" />
+  <title>Kleuterwinkel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/icon-512.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="portraitNotice" class="portraitNotice" aria-label="Draai je iPad">
+    <img src="assets/scanner.png" alt="" />
+    <div class="portraitNotice__text">Draai je iPad</div>
+  </div>
+  <div id="app" class="app">
+    <header class="topbar" id="topbar" role="banner" aria-label="Titelbalk">
+      <div class="topbar__left">
+        <!-- bewust leeg, sluitknop staat rechts -->
+      </div>
+      <div class="topbar__title" id="topbarTitle">
+        <img src="assets/winkelmandje2.png" class="brandmark brandmark--cart" alt="" />
+        <span class="brandtext" aria-label="Kleuterwinkel">Kleuterwinkel</span>
+      </div>
+      <div class="topbar__right">
+        <button id="backBtn" class="iconbtn hidden" aria-label="Sluiten">
+          <span aria-hidden="true">✕</span>
+        </button>
+        <button id="cartMiniBtn" class="pillbtn hidden" type="button" aria-label="Open bonnetje">
+          <img src="assets/winkelmandje2.png" alt="" />
+          <span id="cartMiniTotal">€ 0</span>
+          <span id="cartMiniBadge" class="pillbadge hidden" aria-label="Aantal">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="screen" id="screen" role="main"></main>
+
+    <!-- Geen vaste navigatie voor leerlingen, alles gebeurt in 1 scherm -->
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-label="Dialog">
+      <div class="modal__overlay" data-close="1"></div>
+      <div class="modal__card" id="modalCard"></div>
+    </div>
+  </div>
+
+  <script src="vendor/jsQR.js"></script>
+  <script src="app.js" type="module"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+    // iOS Safari: probeer de adresbalk te laten inklappen in browsermodus
+    window.addEventListener('load', () => {
+      const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || (navigator.standalone === true);
+      if (!standalone) setTimeout(() => { try { window.scrollTo(0, 1); } catch {} }, 50);
+    });
+  </script>
+</body>
+</html>

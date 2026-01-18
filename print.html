@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f6f2ea" />
+  <title>Kleuterwinkel, QR kaartjes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="print.css" />
+</head>
+<body class="printBody">
+  <header class="printTop" role="banner">
+    <div class="printBrand" aria-label="Kleuterwinkel">
+      <img src="assets/winkelmandje2.png" class="printBrand__icon" alt="" />
+      <div>
+        <div class="printBrand__title">QR kaartjes</div>
+        <div class="printBrand__sub">Kleuterwinkel, opslaan als pdf voor stickers of kaartjes</div>
+      </div>
+    </div>
+    <div class="printActions">
+      <button class="secondary" id="closeBtn" type="button">Sluit</button>
+      <button class="primary" id="printBtn" type="button">PDF</button>
+    </div>
+  </header>
+
+  <main class="printMain" role="main">
+    <section class="card pad controls" aria-label="Instellingen">
+      <p class="p" style="margin-top:0">
+        Deze pagina gebruikt jouw producten uit docentenmodus. Kies welke kaartjes je wilt printen.
+      </p>
+
+      <div class="controlsGrid">
+        <div class="controlBlock">
+          <div class="label">Weergave</div>
+          <label class="check"><input id="showName" type="checkbox" checked /> Naam tonen</label>
+          <label class="check"><input id="showPrice" type="checkbox" checked /> Prijs tonen</label>
+          <label class="check"><input id="showPhoto" type="checkbox" /> Foto tonen</label>
+        </div>
+
+        <div class="controlBlock">
+          <div class="label">Layout</div>
+          <label class="row">
+            <span>Kaartjes per rij</span>
+            <select id="cols" class="select">
+              <option value="2">2</option>
+              <option value="3" selected>3</option>
+              <option value="4">4</option>
+            </select>
+          </label>
+          <label class="row">
+            <span>Formaat</span>
+            <select id="size" class="select">
+              <option value="s">Klein</option>
+              <option value="m" selected>Middel</option>
+              <option value="l">Groot</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="controlBlock">
+          <div class="label">Tip</div>
+          <p class="smallmuted" style="margin:0">
+            De QR afbeeldingen worden online geladen. Als je offline bent, zie je altijd de code en naam.
+          </p>
+        </div>
+      </div>
+
+      <div class="picker" id="picker" aria-label="Producten"></div>
+    </section>
+
+    <section class="sheet" aria-label="Printvel">
+      <div class="sheetMeta" id="sheetMeta"></div>
+      <div id="cards" class="cards"></div>
+    </section>
+  </main>
+
+  <script src="print.js" defer></script>
+</body>
+</html>
