@@ -142,50 +142,37 @@
 }
 
 .cards{
-  display: grid;
-  gap: 10px;
+  display:block;
 }
-
-/*
-  Print tip
-  Browsers kunnen grid items soms alsnog over pagina's knippen.
-  Daarom maken we per rij een aparte wrapper (.qrRow) die als geheel
-  naar de volgende pagina kan doorschuiven.
-*/
 
 .qrRow{
-  display: grid;
-  gap: 10px;
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
 }
-
-.cards[data-cols="2"] .qrRow{ grid-template-columns: repeat(2, 1fr); }
-.cards[data-cols="3"] .qrRow{ grid-template-columns: repeat(3, 1fr); }
-.cards[data-cols="4"] .qrRow{ grid-template-columns: repeat(4, 1fr); }
-
 .qrCard{
+  flex: 1 1 0;
   background: rgba(255,255,255,.78);
   border: 1px solid rgba(0,0,0,.10);
-  border-radius: 22px;
-  padding: 12px 12px 16px 12px;
+  border-radius: 18px;
+  padding: 10px;
   display: grid;
-  gap: 10px;
+  gap: 8px;
   align-content: start;
-  box-sizing: border-box;
-  overflow: visible;
 }
 
-/* We printen standaard in klein, voor A4 voorspelbaar */
-.qrCard[data-size="s"]{ min-height: 240px; }
-.qrCard[data-size="m"]{ min-height: 290px; }
-.qrCard[data-size="l"]{ min-height: 360px; }
+.qrCard[data-size="s"]{ min-height: 150px; }
+.qrCard[data-size="m"]{ min-height: 190px; }
+.qrCard[data-size="l"]{ min-height: 240px; }
 
 .qrImgWrap{
-  border-radius: 18px;
+  position: relative;
+  border-radius: 16px;
   background: rgba(246,242,234,.7);
   border: 1px solid rgba(0,0,0,.06);
   display: grid;
   place-items: center;
-  padding: 10px;
+  padding: 8px;
 }
 
 .qrImg{
@@ -194,208 +181,81 @@
   display: block;
 }
 
-.qrBottom{
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: flex-end;
-  gap: 12px;
-  position: relative;
-  z-index: 3;
-}
-
-.qrBottomSpacer{min-width:0}
-
-.qrPriceBox{
-  flex: 1 1 auto;
-  min-width: 0;
-  padding: 6px 0 0 6px;
-  border-radius: 0;
-  background: transparent;
-  border: 0;
-  text-align: left;
-  font-weight: 950;
+.qrBadge{
+  position:absolute;
+  left:8px;
+  bottom:8px;
+  padding:6px 10px;
+  border-radius:14px;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(0,0,0,.12);
+  font-weight: 700;
+  font-size: 18px;
   letter-spacing: .2px;
-  font-size: 34px;
-  line-height: 1.05;
-  transform: translateY(6px);
 }
 
-.qrCard[data-size="s"] .qrPriceBox{ font-size: 30px; padding: 6px 0 0 6px; }
-.qrCard[data-size="l"] .qrPriceBox{ font-size: 40px; padding: 10px 0 0 8px; }
-
-/* Middenstuk met productafbeelding, zonder witte rand of omlijsting */
-.qrMid{
+.qrMeta{
   display: grid;
-  place-items: center;
-  padding: 2px 0 0;
-  background: transparent;
-  border: 0;
-  position: relative;
-  z-index: 1;
+  gap: 4px;
 }
 
-.qrMidPhoto{
-  width: 86px;
-  height: 86px;
-  object-fit: contain;
-  display: block;
-  background: transparent;
-}
-
-.qrCodeBox{
-  flex: 0 0 auto;
-  min-width: 64px;
-  text-align: center;
-  font-weight: 950;
+.qrName{
+  font-weight: 700;
   letter-spacing: .2px;
-  font-size: 22px;
-  opacity: .88;
-  transform: translateY(3px);
 }
 
-.qrProduct{
-  flex: 0 0 auto;
-  width: 128px;
-  display: grid;
-  justify-items: center;
-  gap: 6px;
-  text-align: center;
+.qrCode{
+  font-weight: 600;
+  opacity: .75;
 }
 
-.qrProductPhotoWrap{
-  width: 112px;
-  height: 112px;
-  border-radius: 22px;
-  background: rgba(154, 228, 150, .9);
-  border: 0;
-  display: grid;
-  place-items: center;
-}
-
-.qrProductPhoto{
-  width: 88%;
-  height: 88%;
-  object-fit: contain;
-  display: block;
-}
-
-.qrProductName{
+.qrPrice{
+  display: none;
+  /* legacy */
+  align-items: center;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
   font-weight: 950;
-  letter-spacing: .1px;
-  opacity: .82;
-  font-size: 16px;
-  line-height: 1.05;
-  text-transform: lowercase;
+  background: rgba(244,198,79,.25);
+  border: 1px solid rgba(244,198,79,.45);
+  width: fit-content;
 }
 
-.qrCard[data-size="s"] .qrProduct{ width: 118px; }
-.qrCard[data-size="s"] .qrProductPhotoWrap{ width: 104px; height: 104px; border-radius: 22px; }
-.qrCard[data-size="s"] .qrProductPhoto{ width: 90%; height: 90%; }
-.qrCard[data-size="s"] .qrProductName{ font-size: 15px; }
-
-.qrCard[data-size="l"] .qrProduct{ width: 132px; }
-.qrCard[data-size="l"] .qrProductPhotoWrap{ width: 118px; height: 118px; border-radius: 26px; }
-.qrCard[data-size="l"] .qrProductPhoto{ width: 82%; height: 82%; }
-.qrCard[data-size="l"] .qrProductName{ font-size: 18px; }
+.qrPhoto{
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: rgba(255,255,255,.7);
+  object-fit: cover;
+}
 
 @media print{
+  .sheetMeta{ display:none; }
+  .qrRow{ break-inside: avoid; page-break-inside: avoid; }
+
   .printTop{ display:none; }
   .controls{ display:none; }
   .printMain{ padding: 0; max-width: none; }
   .sheet{ margin-top: 0; }
-  .sheetMeta{ display:none; }
-  .noPrint{ display:none !important; }
-
-  /*
-    Print layout
-    Op papier is inline-block robuuster dan grid als het gaat om pagina-einden.
-    Zo blijft elke QR kaart heel en schuift een volledige rij door naar de volgende pagina.
-  */
-  html, body{
-    height: auto;
-    overflow: visible;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .sheet{ width: 100%; margin: 0; }
-
-  .cards{ display:block; }
-
-  .qrRow{
-    break-inside: avoid;
-    page-break-inside: avoid;
-    display: block;
-    margin: 0 0 10px 0;
-    font-size: 0;
-  }
   .qrCard{
     break-inside: avoid;
     page-break-inside: avoid;
-    display: inline-block;
-    vertical-align: top;
-    margin: 0 10px 0 0;
   }
-  .qrRow .qrCard:last-child{ margin-right:0; }
-
-  .cards[data-cols="2"] .qrCard{ width: calc((100% - 10px) / 2); }
-  .cards[data-cols="3"] .qrCard{ width: calc((100% - 20px) / 3); }
-  .cards[data-cols="4"] .qrCard{ width: calc((100% - 30px) / 4); }
-
-  .printPage{
-    break-after: page;
-    page-break-after: always;
-  }
-  .printPage:last-child{
-    break-after: auto;
-    page-break-after: auto;
-  }
-
-  /*
-    Extra marge helpt wanneer de browser kop en voettekst aan zet.
-    Zo blijft er altijd genoeg ruimte over en worden kaartjes niet geraakt.
-  */
-  @page{ size: A4 portrait; margin: 16mm; }
+  @page{ margin: 10mm; }
 }
 
-/*
-  Force print styling on screen
-  Dit wordt gebruikt om exact te meten hoeveel rijen op een pagina passen
-  voordat de browser de printdialoog opent.
-*/
-.forcePrint .printTop{ display:none; }
-.forcePrint .controls{ display:none; }
-.forcePrint .printMain{ padding: 0; max-width: none; width: 210mm; margin: 0 auto; }
-.forcePrint .sheet{ margin-top: 0; width: 190mm; margin-left: auto; margin-right: auto; }
-.forcePrint .sheetMeta{ display:none; }
-
-.forcePrint html, .forcePrint body{
-  height: auto;
-  overflow: visible;
+.qrBottom{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  padding-top:2px;
 }
-
-.forcePrint .cards{ display:block; }
-
-.forcePrint .qrRow{
-  break-inside: avoid;
-  page-break-inside: avoid;
-  display: block;
-  margin: 0 0 10px 0;
-  font-size: 0;
+.qrCodeOnly{
+  font-weight: 600;
+  font-size: 18px;
+  opacity: .85;
 }
-
-.forcePrint .qrCard{
-  break-inside: avoid;
-  page-break-inside: avoid;
-  display: inline-block;
-  vertical-align: top;
-  margin: 0 10px 0 0;
-}
-.forcePrint .qrRow .qrCard:last-child{ margin-right:0; }
-
-.forcePrint .cards[data-cols="2"] .qrCard{ width: calc((100% - 10px) / 2); }
-.forcePrint .cards[data-cols="3"] .qrCard{ width: calc((100% - 20px) / 3); }
-.forcePrint .cards[data-cols="4"] .qrCard{ width: calc((100% - 30px) / 4); }
-
-/* Pagina styling in schermweergave, print negeert dit */
-.printPage{ margin: 0 0 14px 0; }

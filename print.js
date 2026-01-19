@@ -7,13 +7,12 @@ const pickerEl = $('#picker');
 const cardsEl = $('#cards');
 const sheetMetaEl = $('#sheetMeta');
 
-const showPriceEl = $('#showPrice');
 const showPhotoEl = $('#showPhoto');
 const colsEl = $('#cols');
+const sizeEl = $('#size');
 
 const printBtn = $('#printBtn');
 const closeBtn = $('#closeBtn');
-
 
 function escapeHtml(s){
   return String(s ?? '')
@@ -28,14 +27,11 @@ function escapeAttr(s){
   return escapeHtml(s).replaceAll('\n', ' ');
 }
 
-function money(n){
-  const v = Math.round((Number(n) || 0) * 100) / 100;
-  const isInt = Math.abs(v % 1) < 0.0000001;
-  const nf = new Intl.NumberFormat('nl-NL', {
-    minimumFractionDigits: isInt ? 0 : 2,
-    maximumFractionDigits: 2,
-  });
-  return '€' + nf.format(v);
+function moneyTag(n){
+  const v = Number(n) || 0;
+  const digits = (Math.round(v * 100) % 100 === 0) ? 0 : 2;
+  const txt = v.toLocaleString('nl-NL', { minimumFractionDigits: digits, maximumFractionDigits: 2 });
+  return `€${txt}`;
 }
 
 function loadProducts(){
@@ -50,8 +46,10 @@ function loadProducts(){
 }
 
 function qrPx(){
-  // Vast formaat zodat print voorspelbaar blijft op A4
-  return 200;
+  const s = String(sizeEl.value || 'm');
+  if (s === 's') return 180;
+  if (s === 'l') return 260;
+  return 220;
 }
 
 function buildPicker(products){
@@ -91,53 +89,45 @@ function selectedMap(){
   return map;
 }
 
+function chunk(arr, size){
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
 function renderCards(products){
-  const cols = String(colsEl.value || '3');
-  const colsNum = Math.max(1, Math.min(6, Number.parseInt(cols, 10) || 3));
-  const showPrice = !!showPriceEl.checked;
+  const cols = Math.max(2, Math.min(4, Number(colsEl.value || 3)));
+  const size = String(sizeEl.value || 'm');
   const showPhoto = !!showPhotoEl.checked;
   const picks = selectedMap();
 
-  cardsEl.setAttribute('data-cols', cols);
+  cardsEl.setAttribute('data-cols', String(cols));
 
   const px = qrPx();
   const cards = [];
   let count = 0;
 
-  for (const pickedKey of Object.keys(picks).sort((a,b) => a.localeCompare(b))) {
-    const p = products[pickedKey];
+  for (const code of Object.keys(picks).sort((a,b) => a.localeCompare(b))) {
+    const p = products[code];
     if (!p) continue;
 
-    // Altijd de productcode uit het product zelf gebruiken.
-    // Zo wordt er nooit per ongeluk een naam als code getoond.
-    const code = String(p.code || pickedKey).trim();
-
-    const qty = picks[pickedKey];
+    const qty = picks[code];
     for (let i = 0; i < qty; i += 1) {
       count += 1;
-      const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encodeURIComponent(code)}`;
 
-      const midPhotoHtml = showPhoto && p.photo ? `
-        <div class="qrMid" aria-hidden="true">
-          <img class="qrMidPhoto" src="${escapeAttr(p.photo)}" alt="" />
-        </div>
-      ` : '<div class="qrMid" aria-hidden="true"></div>';
-
-      // Op de kaartjes tonen we alleen de productcode zodat kinderen hem kunnen intypen.
-      const codeHtml = `<div class="qrCodeBox">${escapeHtml(code)}</div>`;
-
-      const priceHtml = showPrice ? `<div class="qrPriceBox">${money(p.price)}</div>` : '<div class="qrPriceBox" aria-hidden="true"></div>';
+      // Hoge foutcorrectie zodat een klein prijslabel in de marge netjes blijft scannen
+      const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&ecc=H&margin=12&data=${encodeURIComponent(code)}`;
+      const photoHtml = showPhoto ? `<img class="qrPhoto" src="${escapeAttr(p.photo)}" alt="" />` : '';
 
       cards.push(`
-        <div class="qrCard" data-size="s">
+        <div class="qrCard" data-size="${escapeAttr(size)}">
           <div class="qrImgWrap">
             <img class="qrImg" data-qr="1" data-code="${escapeAttr(code)}" src="${qrSrc}" alt="QR code ${escapeAttr(code)}" />
+            <div class="qrBadge" aria-hidden="true">${moneyTag(p.price)}</div>
           </div>
-          ${midPhotoHtml}
-          <div class="qrBottom" aria-label="Productinformatie">
-            ${priceHtml}
-            ${codeHtml}
-            <div class="qrBottomSpacer" aria-hidden="true"></div>
+          <div class="qrBottom">
+            ${photoHtml}
+            <div class="qrCodeOnly">${escapeHtml(code)}</div>
           </div>
         </div>
       `);
@@ -146,19 +136,18 @@ function renderCards(products){
 
   if (!cards.length) {
     cardsEl.innerHTML = `
-    <div class="card pad" style="background:rgba(255,255,255,.72); box-shadow:none">
-      <p class="p" style="margin:0">Selecteer minstens één product en zet het aantal op 1 of hoger.</p>
-    </div>
-  `;
+      <div class="card pad" style="background:rgba(255,255,255,.72); box-shadow:none">
+        <p class="p" style="margin:0">Selecteer minstens een product en zet het aantal op 1 of hoger.</p>
+      </div>
+    `;
   } else {
-    const rows = [];
-    for (let i = 0; i < cards.length; i += colsNum) {
-      rows.push(`<div class="qrRow">${cards.slice(i, i + colsNum).join('')}</div>`);
-    }
-    cardsEl.innerHTML = rows.join('');
+    const rows = chunk(cards, cols).map(row => `<div class="qrRow">${row.join('')}</div>`).join('');
+    cardsEl.innerHTML = rows;
   }
 
-  if (sheetMetaEl) sheetMetaEl.textContent = '';
+  const today = new Date();
+  const d = today.toLocaleDateString('nl-NL');
+  sheetMetaEl.textContent = `${count} kaartjes, datum ${d}`;
 
   // Fallback if QR image cannot load
   $$('img[data-qr="1"]', cardsEl).forEach(img => {
@@ -167,23 +156,21 @@ function renderCards(products){
       const fallback = document.createElement('div');
       fallback.style.padding = '18px 10px';
       fallback.style.textAlign = 'center';
-      fallback.style.fontWeight = '950';
+      fallback.style.fontWeight = '900';
       fallback.style.fontSize = '22px';
       fallback.style.opacity = '0.85';
       fallback.textContent = code;
       img.replaceWith(fallback);
     };
   });
-
 }
-
 
 function wireUp(products){
   const rerender = () => renderCards(products);
 
-  showPriceEl.addEventListener('change', rerender);
   showPhotoEl.addEventListener('change', rerender);
   colsEl.addEventListener('change', rerender);
+  sizeEl.addEventListener('change', rerender);
 
   pickerEl.addEventListener('input', (e) => {
     const t = e.target;
@@ -191,32 +178,10 @@ function wireUp(products){
     if (t.matches('input.pick') || t.matches('input.qty')) rerender();
   });
 
-  const originalTitle = document.title;
-  const before = () => {
-    // Minimaliseer browser kop en voettekst (titel wordt vaak meegenomen)
-    try { document.title = ' '; } catch {}
-  };
-  const after = () => {
-    try { document.title = originalTitle; } catch {}
-  };
-
-  window.addEventListener('beforeprint', before);
-  window.addEventListener('afterprint', after);
-
-  printBtn.addEventListener('click', () => {
-    before();
-    window.print();
-    // afterprint wordt niet overal gegarandeerd, dus zet hem ook na een korte tick terug
-    setTimeout(after, 300);
-  });
+  printBtn.addEventListener('click', () => window.print());
 
   closeBtn.addEventListener('click', () => {
-    try {
-      window.close();
-    } catch {
-      // ignore
-    }
-    // If tab cannot close, go back to the app
+    try { window.close(); } catch {}
     setTimeout(() => {
       if (!document.hidden) window.location.href = 'index.html#home';
     }, 120);

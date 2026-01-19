@@ -35,11 +35,7 @@
       <div class="controlsGrid">
         <div class="controlBlock">
           <div class="label">Weergave</div>
-          <label class="check"><input id="showPrice" type="checkbox" checked /> Prijs tonen</label>
-          <label class="check"><input id="showPhoto" type="checkbox" checked /> Foto tonen</label>
-          <p class="smallmuted" style="margin:10px 0 0">
-            Op de kaartjes staat de productcode zodat kinderen hem kunnen intypen als scannen niet lukt.
-          </p>
+          <label class="check"><input id="showPhoto" type="checkbox" checked /> Productplaatje tonen</label>
         </div>
 
         <div class="controlBlock">
@@ -50,6 +46,14 @@
               <option value="2">2</option>
               <option value="3" selected>3</option>
               <option value="4">4</option>
+            </select>
+          </label>
+          <label class="row">
+            <span>Formaat</span>
+            <select id="size" class="select">
+              <option value="s">Klein</option>
+              <option value="m" selected>Middel</option>
+              <option value="l">Groot</option>
             </select>
           </label>
         </div>
@@ -66,7 +70,7 @@
     </section>
 
     <section class="sheet" aria-label="Printvel">
-      <div class="sheetMeta noPrint" id="sheetMeta"></div>
+      <div class="sheetMeta" id="sheetMeta"></div>
       <div id="cards" class="cards"></div>
     </section>
   </main>

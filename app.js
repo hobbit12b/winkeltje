@@ -14,50 +14,55 @@ const cartMiniTotal = $('#cartMiniTotal');
 const cartMiniBadge = $('#cartMiniBadge');
 
 const STORAGE_KEY = 'kleuterwinkel.v1';
-// Verhoog deze versie als de standaard productset wordt uitgebreid.
 const DEFAULT_CATALOG_VERSION = 3;
 
 const DEFAULT_PRODUCTS = {
-  '101': { code: '101', name: 'Banaan', price: 1, photo: 'assets/banaan.png' },
-  '102': { code: '102', name: 'Sinaasappel', price: 1, photo: 'assets/sinaasappel.png' },
-  '103': { code: '103', name: 'Brood', price: 2, photo: 'assets/brood.png' },
-  '104': { code: '104', name: 'Croissant', price: 1, photo: 'assets/croissant.png' },
-  '105': { code: '105', name: 'Melk', price: 2, photo: 'assets/melk.png' },
-  '106': { code: '106', name: 'Boter', price: 2, photo: 'assets/boter.png' },
-  '107': { code: '107', name: 'Ei', price: 1, photo: 'assets/ei.png' },
-  '108': { code: '108', name: 'Eierdoos', price: 3, photo: 'assets/eierdoos.png' },
-  '109': { code: '109', name: 'Worst', price: 2, photo: 'assets/worst.png' },
-  '110': { code: '110', name: 'Ijs', price: 2, photo: 'assets/ijs.png' },
-  '111': { code: '111', name: 'Soep', price: 2, photo: 'assets/soep.png' },
-  '112': { code: '112', name: 'Snoep', price: 1, photo: 'assets/snoep.png' },
-  '113': { code: '113', name: 'Chocolade', price: 2, photo: 'assets/chocolade.png' },
+  '101': { code: '101', name: 'Banaan', price: 1, photo: 'assets/products/banaan.svg' },
+  '102': { code: '102', name: 'Sinaasappel', price: 1, photo: 'assets/products/sinaasappel.svg' },
+  '103': { code: '103', name: 'Brood', price: 2, photo: 'assets/products/brood.svg' },
+  '104': { code: '104', name: 'Croissant', price: 1, photo: 'assets/products/croissant.svg' },
+  '105': { code: '105', name: 'Melk', price: 2, photo: 'assets/products/melk.svg' },
+  '106': { code: '106', name: 'Boter', price: 2, photo: 'assets/products/boter.svg' },
+  '107': { code: '107', name: 'Ei', price: 1, photo: 'assets/products/ei.svg' },
+  '108': { code: '108', name: 'Eierdoos', price: 3, photo: 'assets/products/eierdoos.svg' },
+  '109': { code: '109', name: 'Worst', price: 2, photo: 'assets/products/worst.svg' },
+  '110': { code: '110', name: 'Ijs', price: 2, photo: 'assets/products/ijs.svg' },
+  '111': { code: '111', name: 'Soep', price: 2, photo: 'assets/products/soep.svg' },
+  '112': { code: '112', name: 'Snoep', price: 1, photo: 'assets/products/snoep.svg' },
+  '113': { code: '113', name: 'Chocolade', price: 2, photo: 'assets/products/chocolade.svg' },
 
-  // Extra producten uit de meegeleverde set
-  '114': { code: '114', name: 'Appel', price: 1, photo: 'assets/appel.png' },
-  '115': { code: '115', name: 'Peer', price: 1, photo: 'assets/peer.png' },
-  '116': { code: '116', name: 'Druiven', price: 1, photo: 'assets/druiven.png' },
-  '117': { code: '117', name: 'Mandarijn', price: 1, photo: 'assets/mandarijn.png' },
-  '118': { code: '118', name: 'Wortel', price: 1, photo: 'assets/wortel.png' },
-  '119': { code: '119', name: 'Mais', price: 1, photo: 'assets/mais.png' },
-  '120': { code: '120', name: 'Appelsap', price: 2, photo: 'assets/appelsap.png' },
-  '121': { code: '121', name: 'Sap', price: 2, photo: 'assets/sap.png' },
-  '122': { code: '122', name: 'Chocomel', price: 2, photo: 'assets/chocomel.png' },
-  '123': { code: '123', name: 'Drinkyoghurt', price: 2, photo: 'assets/drinkyoghurt.png' },
-  '124': { code: '124', name: 'Thee', price: 1, photo: 'assets/thee.png' },
-  '125': { code: '125', name: 'Cappuccino', price: 2, photo: 'assets/cappuccino.png' },
-  '126': { code: '126', name: 'Koffiemelk', price: 1, photo: 'assets/koffiemelk.png' },
-  '127': { code: '127', name: 'Hagelslag', price: 2, photo: 'assets/hagelslag.png' },
-  '128': { code: '128', name: 'Choco pops', price: 2, photo: 'assets/choco_pops.png' },
-  '129': { code: '129', name: 'Koekjes', price: 2, photo: 'assets/koekjes.png' },
-  '130': { code: '130', name: 'Bonbon', price: 2, photo: 'assets/bonbon.png' },
-  '131': { code: '131', name: 'Chocola', price: 2, photo: 'assets/chocola.png' },
-  '132': { code: '132', name: 'Hamburger', price: 3, photo: 'assets/hamburger.png' },
-  '133': { code: '133', name: 'Kruiden', price: 1, photo: 'assets/kruiden.png' },
-  '134': { code: '134', name: 'Philadelphia', price: 2, photo: 'assets/philadelphia.png' },
-  '135': { code: '135', name: 'Potje', price: 1, photo: 'assets/potje.png' }
+  '114': { code: '114', name: 'Appel', price: 1, photo: 'assets/products/appel.svg' },
+  '115': { code: '115', name: 'Peer', price: 1, photo: 'assets/products/peer.svg' },
+  '116': { code: '116', name: 'Druiven', price: 1, photo: 'assets/products/druiven.svg' },
+  '117': { code: '117', name: 'Mandarijn', price: 1, photo: 'assets/products/mandarijn.svg' },
+  '118': { code: '118', name: 'Wortel', price: 1, photo: 'assets/products/wortel.svg' },
+  '119': { code: '119', name: 'Mais', price: 1, photo: 'assets/products/mais.svg' },
+  '120': { code: '120', name: 'Appelsap', price: 2, photo: 'assets/products/appelsap.svg' },
+  '121': { code: '121', name: 'Sap', price: 2, photo: 'assets/products/sap.svg' },
+  '122': { code: '122', name: 'Chocomel', price: 2, photo: 'assets/products/chocomel.svg' },
+  '123': { code: '123', name: 'Drinkyoghurt', price: 2, photo: 'assets/products/drinkyoghurt.svg' },
+  '124': { code: '124', name: 'Thee', price: 1, photo: 'assets/products/thee.svg' },
+  '125': { code: '125', name: 'Cappuccino', price: 2, photo: 'assets/products/cappuccino.svg' },
+  '126': { code: '126', name: 'Koffiemelk', price: 1, photo: 'assets/products/koffiemelk.svg' },
+  '127': { code: '127', name: 'Hagelslag', price: 2, photo: 'assets/products/hagelslag.svg' },
+  '128': { code: '128', name: 'Choco Pops', price: 2, photo: 'assets/products/choco_pops.svg' },
+  '129': { code: '129', name: 'Koekjes', price: 2, photo: 'assets/products/koekjes.svg' },
+  '130': { code: '130', name: 'Bonbon', price: 2, photo: 'assets/products/bonbon.svg' },
+  '131': { code: '131', name: 'Chocola', price: 2, photo: 'assets/products/chocola.svg' },
+  '132': { code: '132', name: 'Hamburger', price: 3, photo: 'assets/products/hamburger.svg' },
+  '133': { code: '133', name: 'Kruiden', price: 1, photo: 'assets/products/kruiden.svg' },
+  '134': { code: '134', name: 'Philadelphia', price: 2, photo: 'assets/products/philadelphia.svg' },
+  '135': { code: '135', name: 'Potje', price: 1, photo: 'assets/products/potje.svg' }
 };
 
 const state = loadState();
+
+// Als er nieuwe standaardproducten zijn toegevoegd: sla een keer automatisch op
+if (state.__needsSave) {
+  delete state.__needsSave;
+  try { saveState(); } catch {}
+}
+
 
 let activeStream = null;
 let detector = null;
@@ -237,18 +242,25 @@ function loadState(){
     const teacherPin = typeof data.teacherPin === 'string' ? data.teacherPin : '1234';
     const storedVersion = Number(data.catalogVersion) || 0;
 
-    // Bij een nieuwe standaard productset: voeg nieuwe defaults toe zonder bestaande producten te verliezen.
-    const storedProducts = (data.products && typeof data.products === 'object') ? data.products : {};
-    const products = (storedVersion < DEFAULT_CATALOG_VERSION)
-      ? { ...DEFAULT_PRODUCTS, ...storedProducts }
-      : (Object.keys(storedProducts).length ? storedProducts : DEFAULT_PRODUCTS);
+    // Bij een nieuwe standaard productset: vul ontbrekende producten aan, maar laat eigen aanpassingen staan.
+    let products;
+    let needsSave = false;
+    if (storedVersion < DEFAULT_CATALOG_VERSION) {
+      const existing = (data.products && typeof data.products === 'object') ? data.products : {};
+      products = { ...DEFAULT_PRODUCTS, ...existing };
+      needsSave = true;
+    } else {
+      products = (data.products && Object.keys(data.products).length ? data.products : DEFAULT_PRODUCTS);
+    }
 
-    return {
+    const nextState = {
       products,
       cartLines,
       teacherPin,
       catalogVersion: DEFAULT_CATALOG_VERSION
     };
+    if (needsSave) nextState.__needsSave = true;
+    return nextState;
   } catch {
     return { products: DEFAULT_PRODUCTS, cartLines: [], teacherPin: '1234', catalogVersion: DEFAULT_CATALOG_VERSION };
   }
@@ -274,7 +286,7 @@ function saveState(){
 
 function money(n){
   const v = Math.round((Number(n) || 0) * 100) / 100;
-  return '€ ' + v.toFixed(v % 1 === 0 ? 0 : 2);
+  return '€' + v.toFixed(v % 1 === 0 ? 0 : 2);
 }
 
 function cartTotal(){
@@ -702,9 +714,7 @@ function startViewKid(){
         <img src="assets/scanner.png" alt="" />
       </button>
       <div class="scanMiniRow">
-        <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">
-          <img class="kbdIcon" src="assets/toetsenbord.png" alt="" />
-        </button>
+        <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">⌨️</button>
       </div>
     </div>
   `;
@@ -721,9 +731,7 @@ function scanningViewKid(){
       </div>
     </div>
     <div class="scanMiniRow" style="padding:12px 12px 4px">
-      <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">
-        <img class="kbdIcon" src="assets/toetsenbord.png" alt="" />
-      </button>
+      <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">⌨️</button>
     </div>
   `;
 }
@@ -776,16 +784,15 @@ function renderReceipt(){
     const qty = Math.max(1, Number(line.qty) || 1);
     const p = state.products?.[code] || { code, name: code, price: 0, photo: makeSvgDataUrl('?', '#eaeaea', '🛒') };
     const lineTotal = (Number(p.price) || 0) * qty;
-    const unitPrice = money(p.price);
     return `
       <div class="receiptItem" aria-label="Item">
         <button class="qtyPill" type="button" data-code="${escapeAttr(code)}" aria-label="Aantal">${qty}</button>
-        <div class="receiptUnit" aria-label="Per stuk">
-          <span class="receiptX">x</span>
-          <span class="receiptUnitPrice">${unitPrice}</span>
-        </div>
+        <div class="unitPill" aria-hidden="true">x ${money(p.price)}</div>
         <div class="receiptThumb"><img src="${escapeAttr(p.photo)}" alt="" /></div>
-        <div class="receiptSpacer" aria-hidden="true"></div>
+        <div>
+          <p class="receiptName kidtext">${escapeHtml(p.name)}</p>
+          <p class="receiptMeta kidtext">${escapeHtml(code)}</p>
+        </div>
         <div class="receiptPrice">${money(lineTotal)}</div>
         <button class="receiptDel" type="button" data-del="${escapeAttr(code)}" aria-label="Verwijderen">
           <img src="assets/kruisje.png" alt="" />
@@ -1203,6 +1210,47 @@ function onScanned(code){
   }, 650);
 }
 
+
+function cijfercodeKeypadInner(){
+  const btn = (k, left, top, width, height, aria) => {
+    const a = aria ? ` aria-label="${aria}"` : '';
+    return `<button class="kbdNew__btn" type="button" data-k="${k}" style="left:${left}%; top:${top}%; width:${width}%; height:${height}%"${a}></button>`;
+  };
+
+  // Posities zijn gebaseerd op de meegeleverde afbeelding (cijfercode.png)
+  const col1 = { left: 8.2, width: 26.3 };
+  const col2 = { left: 37.8, width: 26.3 };
+  const col3 = { left: 66.6, width: 26.4 };
+
+  const row1 = { top: 23.7, height: 15.3 };
+  const row2 = { top: 41.8, height: 15.0 };
+  const row3 = { top: 59.7, height: 15.3 };
+  const row4 = { top: 77.8, height: 15.3 };
+
+  const close = { left: 66.6, top: 5.9, width: 26.4, height: 15.0 };
+
+  return `
+    <img class="kbdNew__img" src="assets/cijfercode.png" alt="" />
+    ${btn('Close', close.left, close.top, close.width, close.height, 'Sluiten')}
+
+    ${btn('1', col1.left, row1.top, col1.width, row1.height, '1')}
+    ${btn('2', col2.left, row1.top, col2.width, row1.height, '2')}
+    ${btn('3', col3.left, row1.top, col3.width, row1.height, '3')}
+
+    ${btn('4', col1.left, row2.top, col1.width, row2.height, '4')}
+    ${btn('5', col2.left, row2.top, col2.width, row2.height, '5')}
+    ${btn('6', col3.left, row2.top, col3.width, row2.height, '6')}
+
+    ${btn('7', col1.left, row3.top, col1.width, row3.height, '7')}
+    ${btn('8', col2.left, row3.top, col2.width, row3.height, '8')}
+    ${btn('9', col3.left, row3.top, col3.width, row3.height, '9')}
+
+    ${btn('Wis', col1.left, row4.top, col1.width, row4.height, 'Wis')}
+    ${btn('0', col2.left, row4.top, col2.width, row4.height, '0')}
+    ${btn('OK', col3.left, row4.top, col3.width, row4.height, 'OK')}
+  `;
+}
+
 function openManualEntry(prefill = ''){
   stopCamera();
   window.__isScanning = false;
@@ -1215,17 +1263,13 @@ function openManualEntry(prefill = ''){
       <div class="modalBody" style="padding:18px">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px">
           <div style="display:flex; gap:10px; align-items:center">
-            <div style="width:56px; height:56px; border-radius:18px; border:1px solid rgba(0,0,0,.10); background:rgba(244,198,79,.22); display:grid; place-items:center; overflow:hidden">
-              <img src="assets/toetsenbord.png" alt="" style="width:46px; height:46px; object-fit:contain" />
-            </div>
+            <div style="width:56px; height:56px; border-radius:18px; border:1px solid rgba(0,0,0,.10); background:rgba(244,198,79,.22); display:grid; place-items:center; font-size:24px">⌨️</div>
             <div style="font-weight:950; opacity:.85">${escapeHtml(shown)}</div>
           </div>
           <button class="iconSquare" id="manualClose" aria-label="Sluiten">✕</button>
         </div>
 
-        <div class="keypad" id="manualPad" style="gap:12px">
-          ${['1','2','3','4','5','6','7','8','9','Wis','0','OK'].map(k => `<button class="key" data-k="${k}">${k === 'Wis' ? '⌫' : (k === 'OK' ? '✓' : k)}</button>`).join('')}
-        </div>
+        <div class="kbdNew" id="manualPad">${cijfercodeKeypadInner()}</div>
       </div>
     `;
 
@@ -1235,7 +1279,11 @@ function openManualEntry(prefill = ''){
       const btn = e.target.closest('button');
       if (!btn) return;
       const k = btn.getAttribute('data-k');
-      if (k === 'Wis') {
+      if (k === 'Close') {
+        closeModal();
+        return;
+      }
+    if (k === 'Wis') {
         entered = entered.slice(0, -1);
         playClick();
         render();
@@ -1421,7 +1469,7 @@ function openTeacherPin(){
     body: `
       <p class="p">Voer je pincode in.</p>
       <div class="pinDots" id="pinDots"></div>
-      <div class="keypad" id="keypad"></div>
+      <div class="kbdNew" id="keypad"></div>
       <p class="smallmuted">Standaard is 1234.</p>
     `,
     closeOnOverlay: false
@@ -1437,14 +1485,17 @@ function openTeacherPin(){
     dots.innerHTML = Array.from({ length: 4 }).map((_, i) => `<span class="dot ${i < entered.length ? 'fill' : ''}"></span>`).join('');
   }
 
-  const keys = ['1','2','3','4','5','6','7','8','9','Wis','0','OK'];
-  keypad.innerHTML = keys.map(k => `<button class="key" data-k="${k}">${k}</button>`).join('');
+  keypad.innerHTML = cijfercodeKeypadInner();
 
   keypad.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
     const k = btn.getAttribute('data-k');
 
+    if (k === 'Close') {
+      exitTeacherMode();
+      return;
+    }
     if (k === 'Wis') {
       entered = entered.slice(0, -1);
       renderDots();

@@ -1,4 +1,4 @@
-const CACHE = 'kleuterwinkel-v15';
+const CACHE = 'kleuterwinkel-v16';
 const ASSETS = [
   './',
   './index.html',
@@ -34,6 +34,7 @@ const ASSETS = [
   './assets/soep.png',
   './assets/snoep.png',
   './assets/chocolade.png',
+  './assets/cijfercode.png',
 ];
 
 self.addEventListener('install', (e) => {
