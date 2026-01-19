@@ -197,7 +197,14 @@ function wireUp(products){
   });
 
   printBtn.addEventListener('click', () => {
-    window.print();
+    // Browsers kunnen eigen kopteksten (titel) printen als de gebruiker dat aan laat staan.
+    // Een lege titel maakt dat minder storend.
+    const oldTitle = document.title;
+    document.title = ' ';
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => { document.title = oldTitle; }, 250);
+    }, 50);
   });
 
   closeBtn.addEventListener('click', () => {

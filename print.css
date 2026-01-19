@@ -202,23 +202,24 @@
 .qrPriceBox{
   flex: 1 1 auto;
   min-width: 0;
-  padding: 18px 16px;
-  border-radius: 22px;
-  background: rgba(246,242,234,.95);
-  border: 1px solid rgba(0,0,0,.06);
-  text-align: center;
+  /* Geen vak achter de prijs: alleen tekst */
+  padding: 0 6px 2px 2px;
+  border-radius: 0;
+  background: transparent;
+  border: none;
+  text-align: left;
   font-weight: 950;
   letter-spacing: .2px;
   font-size: 34px;
   line-height: 1;
 }
 
-.qrCard[data-size="s"] .qrPriceBox{ font-size: 28px; padding: 14px 14px; }
-.qrCard[data-size="l"] .qrPriceBox{ font-size: 40px; padding: 22px 18px; }
+.qrCard[data-size="s"] .qrPriceBox{ font-size: 28px; padding: 0 4px 2px 2px; }
+.qrCard[data-size="l"] .qrPriceBox{ font-size: 42px; padding: 0 8px 2px 2px; }
 
 .qrProduct{
   flex: 0 0 auto;
-  width: 112px;
+  width: 132px;
   display: grid;
   justify-items: center;
   gap: 6px;
@@ -226,11 +227,12 @@
 }
 
 .qrProductPhotoWrap{
-  width: 98px;
-  height: 98px;
+  width: 112px;
+  height: 112px;
   border-radius: 22px;
   background: rgba(154, 228, 150, .9);
-  border: 1px solid rgba(0,0,0,.06);
+  /* Geen rand om het productblok */
+  border: none;
   display: grid;
   place-items: center;
 }
@@ -252,12 +254,12 @@
 }
 
 .qrCard[data-size="s"] .qrProduct{ width: 92px; }
-.qrCard[data-size="s"] .qrProductPhotoWrap{ width: 80px; height: 80px; border-radius: 18px; }
+.qrCard[data-size="s"] .qrProductPhotoWrap{ width: 90px; height: 90px; border-radius: 18px; }
 .qrCard[data-size="s"] .qrProductPhoto{ width: 78%; height: 78%; }
 .qrCard[data-size="s"] .qrProductName{ font-size: 14px; }
 
 .qrCard[data-size="l"] .qrProduct{ width: 132px; }
-.qrCard[data-size="l"] .qrProductPhotoWrap{ width: 118px; height: 118px; border-radius: 26px; }
+.qrCard[data-size="l"] .qrProductPhotoWrap{ width: 132px; height: 132px; border-radius: 26px; }
 .qrCard[data-size="l"] .qrProductPhoto{ width: 82%; height: 82%; }
 .qrCard[data-size="l"] .qrProductName{ font-size: 18px; }
 
@@ -266,7 +268,8 @@
   .controls{ display:none; }
   .printMain{ padding: 0; max-width: none; }
   .sheet{ margin-top: 0; }
-  .sheetMeta{ display:none; }
+  .sheetMeta{ display:none !important; height:0 !important; margin:0 !important; padding:0 !important; }
+  #sheetMeta{ display:none !important; }
   .noPrint{ display:none !important; }
 
   /*
