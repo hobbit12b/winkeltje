@@ -14,7 +14,8 @@ const cartMiniTotal = $('#cartMiniTotal');
 const cartMiniBadge = $('#cartMiniBadge');
 
 const STORAGE_KEY = 'kleuterwinkel.v1';
-const DEFAULT_CATALOG_VERSION = 2;
+// Verhoog deze versie als de standaard productset wordt uitgebreid.
+const DEFAULT_CATALOG_VERSION = 3;
 
 const DEFAULT_PRODUCTS = {
   '101': { code: '101', name: 'Banaan', price: 1, photo: 'assets/banaan.png' },
@@ -29,7 +30,31 @@ const DEFAULT_PRODUCTS = {
   '110': { code: '110', name: 'Ijs', price: 2, photo: 'assets/ijs.png' },
   '111': { code: '111', name: 'Soep', price: 2, photo: 'assets/soep.png' },
   '112': { code: '112', name: 'Snoep', price: 1, photo: 'assets/snoep.png' },
-  '113': { code: '113', name: 'Chocolade', price: 2, photo: 'assets/chocolade.png' }
+  '113': { code: '113', name: 'Chocolade', price: 2, photo: 'assets/chocolade.png' },
+
+  // Extra producten uit de meegeleverde set
+  '114': { code: '114', name: 'Appel', price: 1, photo: 'assets/appel.png' },
+  '115': { code: '115', name: 'Peer', price: 1, photo: 'assets/peer.png' },
+  '116': { code: '116', name: 'Druiven', price: 1, photo: 'assets/druiven.png' },
+  '117': { code: '117', name: 'Mandarijn', price: 1, photo: 'assets/mandarijn.png' },
+  '118': { code: '118', name: 'Wortel', price: 1, photo: 'assets/wortel.png' },
+  '119': { code: '119', name: 'Mais', price: 1, photo: 'assets/mais.png' },
+  '120': { code: '120', name: 'Appelsap', price: 2, photo: 'assets/appelsap.png' },
+  '121': { code: '121', name: 'Sap', price: 2, photo: 'assets/sap.png' },
+  '122': { code: '122', name: 'Chocomel', price: 2, photo: 'assets/chocomel.png' },
+  '123': { code: '123', name: 'Drinkyoghurt', price: 2, photo: 'assets/drinkyoghurt.png' },
+  '124': { code: '124', name: 'Thee', price: 1, photo: 'assets/thee.png' },
+  '125': { code: '125', name: 'Cappuccino', price: 2, photo: 'assets/cappuccino.png' },
+  '126': { code: '126', name: 'Koffiemelk', price: 1, photo: 'assets/koffiemelk.png' },
+  '127': { code: '127', name: 'Hagelslag', price: 2, photo: 'assets/hagelslag.png' },
+  '128': { code: '128', name: 'Choco pops', price: 2, photo: 'assets/choco_pops.png' },
+  '129': { code: '129', name: 'Koekjes', price: 2, photo: 'assets/koekjes.png' },
+  '130': { code: '130', name: 'Bonbon', price: 2, photo: 'assets/bonbon.png' },
+  '131': { code: '131', name: 'Chocola', price: 2, photo: 'assets/chocola.png' },
+  '132': { code: '132', name: 'Hamburger', price: 3, photo: 'assets/hamburger.png' },
+  '133': { code: '133', name: 'Kruiden', price: 1, photo: 'assets/kruiden.png' },
+  '134': { code: '134', name: 'Philadelphia', price: 2, photo: 'assets/philadelphia.png' },
+  '135': { code: '135', name: 'Potje', price: 1, photo: 'assets/potje.png' }
 };
 
 const state = loadState();
@@ -212,10 +237,11 @@ function loadState(){
     const teacherPin = typeof data.teacherPin === 'string' ? data.teacherPin : '1234';
     const storedVersion = Number(data.catalogVersion) || 0;
 
-    // Bij een nieuwe standaard productset: vervang alleen de producten, laat PIN en andere settings staan.
+    // Bij een nieuwe standaard productset: voeg nieuwe defaults toe zonder bestaande producten te verliezen.
+    const storedProducts = (data.products && typeof data.products === 'object') ? data.products : {};
     const products = (storedVersion < DEFAULT_CATALOG_VERSION)
-      ? DEFAULT_PRODUCTS
-      : (data.products && Object.keys(data.products).length ? data.products : DEFAULT_PRODUCTS);
+      ? { ...DEFAULT_PRODUCTS, ...storedProducts }
+      : (Object.keys(storedProducts).length ? storedProducts : DEFAULT_PRODUCTS);
 
     return {
       products,
@@ -676,7 +702,9 @@ function startViewKid(){
         <img src="assets/scanner.png" alt="" />
       </button>
       <div class="scanMiniRow">
-        <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">⌨️</button>
+        <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">
+          <img class="kbdIcon" src="assets/toetsenbord.png" alt="" />
+        </button>
       </div>
     </div>
   `;
@@ -693,7 +721,9 @@ function scanningViewKid(){
       </div>
     </div>
     <div class="scanMiniRow" style="padding:12px 12px 4px">
-      <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">⌨️</button>
+      <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">
+        <img class="kbdIcon" src="assets/toetsenbord.png" alt="" />
+      </button>
     </div>
   `;
 }
@@ -1183,7 +1213,9 @@ function openManualEntry(prefill = ''){
       <div class="modalBody" style="padding:18px">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px">
           <div style="display:flex; gap:10px; align-items:center">
-            <div style="width:56px; height:56px; border-radius:18px; border:1px solid rgba(0,0,0,.10); background:rgba(244,198,79,.22); display:grid; place-items:center; font-size:24px">⌨️</div>
+            <div style="width:56px; height:56px; border-radius:18px; border:1px solid rgba(0,0,0,.10); background:rgba(244,198,79,.22); display:grid; place-items:center; overflow:hidden">
+              <img src="assets/toetsenbord.png" alt="" style="width:46px; height:46px; object-fit:contain" />
+            </div>
             <div style="font-weight:950; opacity:.85">${escapeHtml(shown)}</div>
           </div>
           <button class="iconSquare" id="manualClose" aria-label="Sluiten">✕</button>

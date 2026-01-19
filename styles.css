@@ -251,6 +251,7 @@ body{
   font-size:22px;
 }
 .iconSquare--kbd{font-size:28px}
+.iconSquare--kbd .kbdIcon{width:34px; height:34px; object-fit:contain; display:block}
 .iconSquare:active{transform: translateY(1px)}
 
 .cameraBtn{

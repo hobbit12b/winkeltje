@@ -173,7 +173,8 @@
   box-sizing: border-box;
 }
 
-.qrCard[data-size="s"]{ min-height: 220px; }
+/* We printen standaard in klein, voor A4 voorspelbaar */
+.qrCard[data-size="s"]{ min-height: 240px; }
 .qrCard[data-size="m"]{ min-height: 290px; }
 .qrCard[data-size="l"]{ min-height: 360px; }
 
@@ -202,11 +203,10 @@
 .qrPriceBox{
   flex: 1 1 auto;
   min-width: 0;
-  /* Geen vak achter de prijs: alleen tekst */
-  padding: 0 6px 2px 2px;
+  padding: 6px 0;
   border-radius: 0;
   background: transparent;
-  border: none;
+  border: 0;
   text-align: left;
   font-weight: 950;
   letter-spacing: .2px;
@@ -214,12 +214,12 @@
   line-height: 1;
 }
 
-.qrCard[data-size="s"] .qrPriceBox{ font-size: 28px; padding: 0 4px 2px 2px; }
-.qrCard[data-size="l"] .qrPriceBox{ font-size: 42px; padding: 0 8px 2px 2px; }
+.qrCard[data-size="s"] .qrPriceBox{ font-size: 30px; padding: 6px 0; }
+.qrCard[data-size="l"] .qrPriceBox{ font-size: 40px; padding: 22px 18px; }
 
 .qrProduct{
   flex: 0 0 auto;
-  width: 132px;
+  width: 128px;
   display: grid;
   justify-items: center;
   gap: 6px;
@@ -231,15 +231,14 @@
   height: 112px;
   border-radius: 22px;
   background: rgba(154, 228, 150, .9);
-  /* Geen rand om het productblok */
-  border: none;
+  border: 0;
   display: grid;
   place-items: center;
 }
 
 .qrProductPhoto{
-  width: 80%;
-  height: 80%;
+  width: 88%;
+  height: 88%;
   object-fit: contain;
   display: block;
 }
@@ -253,13 +252,13 @@
   text-transform: lowercase;
 }
 
-.qrCard[data-size="s"] .qrProduct{ width: 92px; }
-.qrCard[data-size="s"] .qrProductPhotoWrap{ width: 90px; height: 90px; border-radius: 18px; }
-.qrCard[data-size="s"] .qrProductPhoto{ width: 78%; height: 78%; }
-.qrCard[data-size="s"] .qrProductName{ font-size: 14px; }
+.qrCard[data-size="s"] .qrProduct{ width: 118px; }
+.qrCard[data-size="s"] .qrProductPhotoWrap{ width: 104px; height: 104px; border-radius: 22px; }
+.qrCard[data-size="s"] .qrProductPhoto{ width: 90%; height: 90%; }
+.qrCard[data-size="s"] .qrProductName{ font-size: 15px; }
 
 .qrCard[data-size="l"] .qrProduct{ width: 132px; }
-.qrCard[data-size="l"] .qrProductPhotoWrap{ width: 132px; height: 132px; border-radius: 26px; }
+.qrCard[data-size="l"] .qrProductPhotoWrap{ width: 118px; height: 118px; border-radius: 26px; }
 .qrCard[data-size="l"] .qrProductPhoto{ width: 82%; height: 82%; }
 .qrCard[data-size="l"] .qrProductName{ font-size: 18px; }
 
@@ -268,8 +267,7 @@
   .controls{ display:none; }
   .printMain{ padding: 0; max-width: none; }
   .sheet{ margin-top: 0; }
-  .sheetMeta{ display:none !important; height:0 !important; margin:0 !important; padding:0 !important; }
-  #sheetMeta{ display:none !important; }
+  .sheetMeta{ display:none; }
   .noPrint{ display:none !important; }
 
   /*
@@ -321,7 +319,7 @@
     Extra marge helpt wanneer de browser kop en voettekst aan zet.
     Zo blijft er altijd genoeg ruimte over en worden kaartjes niet geraakt.
   */
-  @page{ size: A4 portrait; margin: 14mm; }
+  @page{ size: A4 portrait; margin: 16mm; }
 }
 
 /*
