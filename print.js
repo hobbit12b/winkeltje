@@ -104,11 +104,15 @@ function renderCards(products){
   const cards = [];
   let count = 0;
 
-  for (const code of Object.keys(picks).sort((a,b) => a.localeCompare(b))) {
-    const p = products[code];
+  for (const pickedKey of Object.keys(picks).sort((a,b) => a.localeCompare(b))) {
+    const p = products[pickedKey];
     if (!p) continue;
 
-    const qty = picks[code];
+    // Altijd de productcode uit het product zelf gebruiken.
+    // Zo wordt er nooit per ongeluk een naam als code getoond.
+    const code = String(p.code || pickedKey).trim();
+
+    const qty = picks[pickedKey];
     for (let i = 0; i < qty; i += 1) {
       count += 1;
       const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encodeURIComponent(code)}`;

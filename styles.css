@@ -241,6 +241,10 @@ body{
 
 .scanMiniRow{display:flex; gap:10px; justify-content:center; margin-top:10px}
 .scanMiniRow .iconSquare{width:58px; height:58px; font-size:26px}
+
+/* Toetsenbordknop onder de scanner mag extra groot zijn, dit is de fallback als scannen niet lukt */
+.scanMiniRow .iconSquare--kbd{width:78px; height:78px; border-radius:24px}
+.scanMiniRow .iconSquare--kbd .kbdIcon{width:48px; height:48px}
 .iconSquare{
   width:54px;
   height:54px;
