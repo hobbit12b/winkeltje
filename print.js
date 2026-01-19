@@ -117,26 +117,27 @@ function renderCards(products){
       count += 1;
       const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encodeURIComponent(code)}`;
 
-      const photoHtml = showPhoto && p.photo ? `
-        <div class="qrProductPhotoWrap" aria-hidden="true">
-          <img class="qrProductPhoto" src="${escapeAttr(p.photo)}" alt="" />
+      const midPhotoHtml = showPhoto && p.photo ? `
+        <div class="qrMid" aria-hidden="true">
+          <img class="qrMidPhoto" src="${escapeAttr(p.photo)}" alt="" />
         </div>
-      ` : '';
+      ` : '<div class="qrMid" aria-hidden="true"></div>';
 
-      // Op de kaartjes tonen we de productcode zodat kinderen hem kunnen intypen.
-      const codeHtml = `<div class="qrProductName">${escapeHtml(code)}</div>`;
-      const productHtml = (photoHtml || codeHtml) ? `<div class="qrProduct">${photoHtml}${codeHtml}</div>` : '';
+      // Op de kaartjes tonen we alleen de productcode zodat kinderen hem kunnen intypen.
+      const codeHtml = `<div class="qrCodeBox">${escapeHtml(code)}</div>`;
 
-      const priceHtml = showPrice ? `<div class="qrPriceBox">${money(p.price)}</div>` : '';
+      const priceHtml = showPrice ? `<div class="qrPriceBox">${money(p.price)}</div>` : '<div class="qrPriceBox" aria-hidden="true"></div>';
 
       cards.push(`
         <div class="qrCard" data-size="s">
           <div class="qrImgWrap">
             <img class="qrImg" data-qr="1" data-code="${escapeAttr(code)}" src="${qrSrc}" alt="QR code ${escapeAttr(code)}" />
           </div>
+          ${midPhotoHtml}
           <div class="qrBottom" aria-label="Productinformatie">
             ${priceHtml}
-            ${productHtml}
+            ${codeHtml}
+            <div class="qrBottomSpacer" aria-hidden="true"></div>
           </div>
         </div>
       `);

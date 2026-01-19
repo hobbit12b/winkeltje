@@ -776,14 +776,16 @@ function renderReceipt(){
     const qty = Math.max(1, Number(line.qty) || 1);
     const p = state.products?.[code] || { code, name: code, price: 0, photo: makeSvgDataUrl('?', '#eaeaea', '🛒') };
     const lineTotal = (Number(p.price) || 0) * qty;
+    const unitPrice = money(p.price);
     return `
       <div class="receiptItem" aria-label="Item">
         <button class="qtyPill" type="button" data-code="${escapeAttr(code)}" aria-label="Aantal">${qty}</button>
-        <div class="receiptThumb"><img src="${escapeAttr(p.photo)}" alt="" /></div>
-        <div>
-          <p class="receiptName kidtext">${escapeHtml(p.name)}</p>
-          <p class="receiptMeta kidtext">${escapeHtml(code)}</p>
+        <div class="receiptUnit" aria-label="Per stuk">
+          <span class="receiptX">x</span>
+          <span class="receiptUnitPrice">${unitPrice}</span>
         </div>
+        <div class="receiptThumb"><img src="${escapeAttr(p.photo)}" alt="" /></div>
+        <div class="receiptSpacer" aria-hidden="true"></div>
         <div class="receiptPrice">${money(lineTotal)}</div>
         <button class="receiptDel" type="button" data-del="${escapeAttr(code)}" aria-label="Verwijderen">
           <img src="assets/kruisje.png" alt="" />

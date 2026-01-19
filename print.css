@@ -166,11 +166,12 @@
   background: rgba(255,255,255,.78);
   border: 1px solid rgba(0,0,0,.10);
   border-radius: 22px;
-  padding: 12px;
+  padding: 12px 12px 16px 12px;
   display: grid;
   gap: 10px;
   align-content: start;
   box-sizing: border-box;
+  overflow: visible;
 }
 
 /* We printen standaard in klein, voor A4 voorspelbaar */
@@ -194,16 +195,20 @@
 }
 
 .qrBottom{
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: flex-end;
-  justify-content: space-between;
   gap: 12px;
+  position: relative;
+  z-index: 3;
 }
+
+.qrBottomSpacer{min-width:0}
 
 .qrPriceBox{
   flex: 1 1 auto;
   min-width: 0;
-  padding: 6px 0;
+  padding: 6px 0 0 6px;
   border-radius: 0;
   background: transparent;
   border: 0;
@@ -211,11 +216,42 @@
   font-weight: 950;
   letter-spacing: .2px;
   font-size: 34px;
-  line-height: 1;
+  line-height: 1.05;
+  transform: translateY(6px);
 }
 
-.qrCard[data-size="s"] .qrPriceBox{ font-size: 30px; padding: 6px 0; }
-.qrCard[data-size="l"] .qrPriceBox{ font-size: 40px; padding: 22px 18px; }
+.qrCard[data-size="s"] .qrPriceBox{ font-size: 30px; padding: 6px 0 0 6px; }
+.qrCard[data-size="l"] .qrPriceBox{ font-size: 40px; padding: 10px 0 0 8px; }
+
+/* Middenstuk met productafbeelding, zonder witte rand of omlijsting */
+.qrMid{
+  display: grid;
+  place-items: center;
+  padding: 2px 0 0;
+  background: transparent;
+  border: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.qrMidPhoto{
+  width: 86px;
+  height: 86px;
+  object-fit: contain;
+  display: block;
+  background: transparent;
+}
+
+.qrCodeBox{
+  flex: 0 0 auto;
+  min-width: 64px;
+  text-align: center;
+  font-weight: 950;
+  letter-spacing: .2px;
+  font-size: 22px;
+  opacity: .88;
+  transform: translateY(3px);
+}
 
 .qrProduct{
   flex: 0 0 auto;
