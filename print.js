@@ -112,24 +112,20 @@ function renderCards(products){
       count += 1;
       const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encodeURIComponent(code)}`;
 
-      const photoHtml = showPhoto ? `<img class="qrPhoto" src="${escapeAttr(p.photo)}" alt="" />` : '';
       const nameHtml = showName ? `<div class="qrName">${escapeHtml(p.name)}</div>` : '';
-      const priceHtml = showPrice ? `<div class="qrPrice"><span aria-hidden="true">🏷️</span><span>${money(p.price)}</span></div>` : '';
+      // In de printlayout willen we onderaan altijd: code links, foto midden, prijs rechts
+      const footerPhoto = p.photo ? `<img class="qrFooterPhotoImg" src="${escapeAttr(p.photo)}" alt="" />` : '';
 
       cards.push(`
         <div class="qrCard" data-size="${escapeAttr(size)}">
           <div class="qrImgWrap">
             <img class="qrImg" data-qr="1" data-code="${escapeAttr(code)}" src="${qrSrc}" alt="QR code ${escapeAttr(code)}" />
           </div>
-          <div class="qrMeta">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
-              <div>
-                ${nameHtml}
-                <div class="qrCode">Code, ${escapeHtml(code)}</div>
-              </div>
-              ${photoHtml}
-            </div>
-            ${priceHtml}
+          ${nameHtml}
+          <div class="qrFooter" aria-label="Productinfo">
+            <div class="qrFooterCode">${escapeHtml(code)}</div>
+            <div class="qrFooterPhoto">${footerPhoto}</div>
+            <div class="qrFooterPrice">${money(p.price)}</div>
           </div>
         </div>
       `);

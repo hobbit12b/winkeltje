@@ -179,40 +179,53 @@
   display: block;
 }
 
-.qrMeta{
-  display: grid;
-  gap: 4px;
-}
-
 .qrName{
   font-weight: 950;
   letter-spacing: .2px;
 }
 
-.qrCode{
-  font-weight: 900;
-  opacity: .75;
+.qrFooter{
+  display: grid;
+  grid-template-columns: 1fr 64px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(0,0,0,.08);
 }
 
-.qrPrice{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.qrFooterCode{
+  font-weight: 950;
+  opacity: .85;
+  justify-self: start;
+}
+
+.qrFooterPhoto{
+  justify-self: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.06);
+  background: rgba(255,255,255,.75);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.qrFooterPhotoImg{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.qrFooterPrice{
+  font-weight: 950;
+  justify-self: end;
+  background: rgba(244,198,79,.22);
+  border: 1px solid rgba(244,198,79,.45);
   padding: 6px 10px;
   border-radius: 999px;
-  font-weight: 950;
-  background: rgba(244,198,79,.25);
-  border: 1px solid rgba(244,198,79,.45);
   width: fit-content;
-}
-
-.qrPhoto{
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  border: 1px solid rgba(0,0,0,.06);
-  background: rgba(255,255,255,.7);
-  object-fit: cover;
 }
 
 @media print{

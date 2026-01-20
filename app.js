@@ -749,10 +749,9 @@ function renderReceipt(){
     return `
       <div class="receiptItem" aria-label="Item">
         <button class="qtyPill" type="button" data-code="${escapeAttr(code)}" aria-label="Aantal">${qty}</button>
-        <div class="receiptThumb"><img src="${escapeAttr(p.photo)}" alt="" /></div>
-        <div>
-          <p class="receiptName kidtext">${escapeHtml(p.name)}</p>
-          <p class="receiptMeta kidtext">${escapeHtml(code)}</p>
+        <div class="unitPill" aria-label="Stukprijs">x ${money(p.price)}</div>
+        <div class="receiptThumb" aria-label="Product">
+          <img src="${escapeAttr(p.photo)}" alt="" />
         </div>
         <div class="receiptPrice">${money(lineTotal)}</div>
         <button class="receiptDel" type="button" data-del="${escapeAttr(code)}" aria-label="Verwijderen">
@@ -1171,6 +1170,57 @@ function onScanned(code){
   }, 650);
 }
 
+function svgKeypadHtml({ id = 'pad', aria = 'Toetsenbord' } = {}){
+  const keys = [
+    '1','2','3',
+    '4','5','6',
+    '7','8','9',
+    'Wis','0','OK'
+  ];
+  return `
+    <div class="svgKeypad" id="${escapeAttr(id)}" aria-label="${escapeAttr(aria)}">
+      <img class="svgKeypad__img" src="assets/cijfercode.svg" alt="" />
+      <div class="svgKeypad__grid" aria-hidden="true">
+        ${keys.map(k => `<button class="svgKey" type="button" data-k="${escapeAttr(k)}" aria-label="${escapeAttr(k)}"></button>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function wireSvgKeypad(rootEl, onKey){
+  if (!rootEl || rootEl._svgPadWired) return;
+  rootEl._svgPadWired = true;
+
+  const press = (btn, on) => {
+    if (!btn) return;
+    btn.classList.toggle('isPressed', !!on);
+  };
+
+  rootEl.addEventListener('pointerdown', (e) => {
+    const btn = e.target.closest('.svgKey');
+    if (!btn) return;
+    press(btn, true);
+  });
+  rootEl.addEventListener('pointerup', (e) => {
+    const btn = e.target.closest('.svgKey');
+    if (!btn) return;
+    press(btn, false);
+  });
+  rootEl.addEventListener('pointercancel', (e) => {
+    const btn = e.target.closest('.svgKey');
+    if (!btn) return;
+    press(btn, false);
+  });
+
+  rootEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('.svgKey');
+    if (!btn) return;
+    press(btn, false);
+    const k = btn.getAttribute('data-k');
+    if (k && onKey) onKey(k);
+  });
+}
+
 function openManualEntry(prefill = ''){
   stopCamera();
   window.__isScanning = false;
@@ -1189,18 +1239,13 @@ function openManualEntry(prefill = ''){
           <button class="iconSquare" id="manualClose" aria-label="Sluiten">✕</button>
         </div>
 
-        <div class="keypad" id="manualPad" style="gap:12px">
-          ${['1','2','3','4','5','6','7','8','9','Wis','0','OK'].map(k => `<button class="key" data-k="${k}">${k === 'Wis' ? '⌫' : (k === 'OK' ? '✓' : k)}</button>`).join('')}
-        </div>
+        ${svgKeypadHtml({ id: 'manualPad', aria: 'Cijfercode' })}
       </div>
     `;
 
     $('#manualClose').onclick = () => closeModal();
 
-    $('#manualPad').onclick = (e) => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      const k = btn.getAttribute('data-k');
+    wireSvgKeypad($('#manualPad'), (k) => {
       if (k === 'Wis') {
         entered = entered.slice(0, -1);
         playClick();
@@ -1219,7 +1264,7 @@ function openManualEntry(prefill = ''){
         playClick();
         render();
       }
-    };
+    });
   };
 
   modalEl.classList.remove('hidden');
@@ -1387,7 +1432,7 @@ function openTeacherPin(){
     body: `
       <p class="p">Voer je pincode in.</p>
       <div class="pinDots" id="pinDots"></div>
-      <div class="keypad" id="keypad"></div>
+      ${svgKeypadHtml({ id: 'keypad', aria: 'Pincode' })}
       <p class="smallmuted">Standaard is 1234.</p>
     `,
     closeOnOverlay: false
@@ -1403,13 +1448,7 @@ function openTeacherPin(){
     dots.innerHTML = Array.from({ length: 4 }).map((_, i) => `<span class="dot ${i < entered.length ? 'fill' : ''}"></span>`).join('');
   }
 
-  const keys = ['1','2','3','4','5','6','7','8','9','Wis','0','OK'];
-  keypad.innerHTML = keys.map(k => `<button class="key" data-k="${k}">${k}</button>`).join('');
-
-  keypad.addEventListener('click', (e) => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-    const k = btn.getAttribute('data-k');
+  wireSvgKeypad(keypad, (k) => {
 
     if (k === 'Wis') {
       entered = entered.slice(0, -1);
