@@ -14,7 +14,7 @@ const cartMiniTotal = $('#cartMiniTotal');
 const cartMiniBadge = $('#cartMiniBadge');
 
 const STORAGE_KEY = 'kleuterwinkel.v1';
-const DEFAULT_CATALOG_VERSION = 3;
+const DEFAULT_CATALOG_VERSION = 2;
 
 const DEFAULT_PRODUCTS = {
   '101': { code: '101', name: 'Banaan', price: 1, photo: 'assets/banaan.png' },
@@ -29,36 +29,10 @@ const DEFAULT_PRODUCTS = {
   '110': { code: '110', name: 'Ijs', price: 2, photo: 'assets/ijs.png' },
   '111': { code: '111', name: 'Soep', price: 2, photo: 'assets/soep.png' },
   '112': { code: '112', name: 'Snoep', price: 1, photo: 'assets/snoep.png' },
-  '113': { code: '113', name: 'Chocolade', price: 2, photo: 'assets/chocolade.png' },
-  '114': { code: '114', name: 'Appel', price: 1, photo: 'assets/appel.png' },
-  '115': { code: '115', name: 'Peer', price: 1, photo: 'assets/peer.png' },
-  '116': { code: '116', name: 'Druiven', price: 1, photo: 'assets/druiven.png' },
-  '117': { code: '117', name: 'Mandarijn', price: 1, photo: 'assets/mandarijn.png' },
-  '118': { code: '118', name: 'Wortel', price: 1, photo: 'assets/wortel.png' },
-  '119': { code: '119', name: 'Mais', price: 1, photo: 'assets/mais.png' },
-  '120': { code: '120', name: 'Hamburger', price: 2, photo: 'assets/hamburger.png' },
-  '121': { code: '121', name: 'Hagelslag', price: 2, photo: 'assets/hagelslag.png' },
-  '122': { code: '122', name: 'Choco Pops', price: 2, photo: 'assets/choco_pops.png' },
-  '123': { code: '123', name: 'Drinkyoghurt', price: 2, photo: 'assets/drinkyoghurt.png' },
-  '124': { code: '124', name: 'Sap', price: 1, photo: 'assets/sap.png' },
-  '125': { code: '125', name: 'Appelsap', price: 2, photo: 'assets/appelsap.png' },
-  '126': { code: '126', name: 'Chocomel', price: 1, photo: 'assets/chocomel.png' },
-  '127': { code: '127', name: 'Koffiemelk', price: 2, photo: 'assets/koffiemelk.png' },
-  '128': { code: '128', name: 'Cappuccino', price: 2, photo: 'assets/cappuccino.png' },
-  '129': { code: '129', name: 'Thee', price: 2, photo: 'assets/thee.png' },
-  '130': { code: '130', name: 'Potje', price: 2, photo: 'assets/potje.png' },
-  '131': { code: '131', name: 'Kruiden', price: 2, photo: 'assets/kruiden.png' },
-  '132': { code: '132', name: 'Philadelphia', price: 3, photo: 'assets/philadelphia.png' },
-  '133': { code: '133', name: 'Koekjes', price: 1, photo: 'assets/koekjes.png' },
-  '134': { code: '134', name: 'Bonbon', price: 2, photo: 'assets/bonbon.png' },
-  '135': { code: '135', name: 'Chocola', price: 1, photo: 'assets/chocola.png' }
+  '113': { code: '113', name: 'Chocolade', price: 2, photo: 'assets/chocolade.png' }
 };
 
 const state = loadState();
-if (window.__needsCatalogSave) {
-  try { state.catalogVersion = DEFAULT_CATALOG_VERSION; saveState(); } catch {}
-  window.__needsCatalogSave = false;
-}
 
 let activeStream = null;
 let detector = null;
@@ -238,17 +212,10 @@ function loadState(){
     const teacherPin = typeof data.teacherPin === 'string' ? data.teacherPin : '1234';
     const storedVersion = Number(data.catalogVersion) || 0;
 
-    if (storedVersion < DEFAULT_CATALOG_VERSION) window.__needsCatalogSave = true;
-
-    // Bij een nieuwe standaard productset: voeg nieuwe producten toe, maar behoud eigen wijzigingen.
-    const existing = (data.products && Object.keys(data.products).length) ? data.products : {};
-    const upgraded = (storedVersion < DEFAULT_CATALOG_VERSION);
-    const products = upgraded
-      ? { ...DEFAULT_PRODUCTS, ...existing }
-      : (Object.keys(existing).length ? existing : DEFAULT_PRODUCTS);
-
-    // Na een upgrade slaan we 1x terug op, zodat print.html direct de nieuwste set ziet
-    if (upgraded) window.__needsCatalogSave = true;
+    // Bij een nieuwe standaard productset: vervang alleen de producten, laat PIN en andere settings staan.
+    const products = (storedVersion < DEFAULT_CATALOG_VERSION)
+      ? DEFAULT_PRODUCTS
+      : (data.products && Object.keys(data.products).length ? data.products : DEFAULT_PRODUCTS);
 
     return {
       products,
@@ -282,10 +249,6 @@ function saveState(){
 function money(n){
   const v = Math.round((Number(n) || 0) * 100) / 100;
   return '€ ' + v.toFixed(v % 1 === 0 ? 0 : 2);
-}
-
-function moneyTag(n){
-  return money(n).replace('€ ', '€');
 }
 
 function cartTotal(){
@@ -713,7 +676,7 @@ function startViewKid(){
         <img src="assets/scanner.png" alt="" />
       </button>
       <div class="scanMiniRow">
-        <button class="kbdBtn" id="manualBtn" aria-label="Code invoeren"><span class="kbdIcon" aria-hidden="true"></span></button>
+        <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">⌨️</button>
       </div>
     </div>
   `;
@@ -730,7 +693,7 @@ function scanningViewKid(){
       </div>
     </div>
     <div class="scanMiniRow" style="padding:12px 12px 4px">
-      <button class="kbdBtn" id="manualBtn" aria-label="Code invoeren"><span class="kbdIcon" aria-hidden="true"></span></button>
+      <button class="iconSquare iconSquare--kbd" id="manualBtn" aria-label="Code">⌨️</button>
     </div>
   `;
 }
@@ -786,7 +749,6 @@ function renderReceipt(){
     return `
       <div class="receiptItem" aria-label="Item">
         <button class="qtyPill" type="button" data-code="${escapeAttr(code)}" aria-label="Aantal">${qty}</button>
-        <div class="unitPill" aria-label="Stukprijs">x ${moneyTag(p.price)}</div>
         <div class="receiptThumb"><img src="${escapeAttr(p.photo)}" alt="" /></div>
         <div>
           <p class="receiptName kidtext">${escapeHtml(p.name)}</p>
@@ -1218,75 +1180,46 @@ function openManualEntry(prefill = ''){
   const render = () => {
     const shown = entered || '…';
     modalCard.innerHTML = `
-      <div class="modalBody manualBody">
-        <div class="manualTop">
-          <div class="manualEntered" aria-label="Ingevoerde code">${escapeHtml(shown)}</div>
+      <div class="modalBody" style="padding:18px">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px">
+          <div style="display:flex; gap:10px; align-items:center">
+            <div style="width:56px; height:56px; border-radius:18px; border:1px solid rgba(0,0,0,.10); background:rgba(244,198,79,.22); display:grid; place-items:center; font-size:24px">⌨️</div>
+            <div style="font-weight:950; opacity:.85">${escapeHtml(shown)}</div>
+          </div>
+          <button class="iconSquare" id="manualClose" aria-label="Sluiten">✕</button>
         </div>
 
-        <div class="manualPadImg" id="manualPadImg" aria-label="Toetsenbord">
-          <button class="padHit" data-k="CLOSE" aria-label="Sluiten" style="left:82%; top:14%; width:16%; height:16%"></button>
-
-          <button class="padHit" data-k="1" aria-label="1" style="left:18%; top:36%; width:24%; height:16%"></button>
-          <button class="padHit" data-k="2" aria-label="2" style="left:50%; top:36%; width:24%; height:16%"></button>
-          <button class="padHit" data-k="3" aria-label="3" style="left:82%; top:36%; width:24%; height:16%"></button>
-
-          <button class="padHit" data-k="4" aria-label="4" style="left:18%; top:54%; width:24%; height:16%"></button>
-          <button class="padHit" data-k="5" aria-label="5" style="left:50%; top:54%; width:24%; height:16%"></button>
-          <button class="padHit" data-k="6" aria-label="6" style="left:82%; top:54%; width:24%; height:16%"></button>
-
-          <button class="padHit" data-k="7" aria-label="7" style="left:18%; top:72%; width:24%; height:16%"></button>
-          <button class="padHit" data-k="8" aria-label="8" style="left:50%; top:72%; width:24%; height:16%"></button>
-          <button class="padHit" data-k="9" aria-label="9" style="left:82%; top:72%; width:24%; height:16%"></button>
-
-          <button class="padHit" data-k="Wis" aria-label="Wis" style="left:18%; top:90%; width:24%; height:16%"></button>
-          <button class="padHit" data-k="0" aria-label="0" style="left:50%; top:90%; width:24%; height:16%"></button>
-          <button class="padHit" data-k="OK" aria-label="Ok" style="left:82%; top:90%; width:24%; height:16%"></button>
+        <div class="keypad" id="manualPad" style="gap:12px">
+          ${['1','2','3','4','5','6','7','8','9','Wis','0','OK'].map(k => `<button class="key" data-k="${k}">${k === 'Wis' ? '⌫' : (k === 'OK' ? '✓' : k)}</button>`).join('')}
         </div>
       </div>
     `;
 
-    const pad = $('#manualPadImg');
-    if (pad) {
-      // Drukfeedback (werkt beter op iPad dan alleen :active)
-      pad.querySelectorAll('.padHit').forEach((btn) => {
-        const down = () => btn.classList.add('isPressed');
-        const up = () => setTimeout(() => btn.classList.remove('isPressed'), 80);
-        btn.addEventListener('pointerdown', down, { passive: true });
-        btn.addEventListener('pointerup', up, { passive: true });
-        btn.addEventListener('pointercancel', up, { passive: true });
-        btn.addEventListener('pointerleave', up, { passive: true });
-      });
+    $('#manualClose').onclick = () => closeModal();
 
-      pad.onclick = (e) => {
-        const btn = e.target.closest('button');
-        if (!btn) return;
-        const k = btn.getAttribute('data-k');
-        if (!k) return;
-        if (k === 'CLOSE') {
-          playClick();
-          closeModal();
-          return;
-        }
-        if (k === 'Wis') {
-          entered = entered.slice(0, -1);
-          playClick();
-          render();
-          return;
-        }
-        if (k === 'OK') {
-          const code = entered.trim();
-          closeModal();
-          if (!code) return;
-          onScanned(code);
-          return;
-        }
-        if (/^[0-9]$/.test(k) && entered.length < 6) {
-          entered += k;
-          playClick();
-          render();
-        }
-      };
-    }
+    $('#manualPad').onclick = (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      const k = btn.getAttribute('data-k');
+      if (k === 'Wis') {
+        entered = entered.slice(0, -1);
+        playClick();
+        render();
+        return;
+      }
+      if (k === 'OK') {
+        const code = entered.trim();
+        closeModal();
+        if (!code) return;
+        onScanned(code);
+        return;
+      }
+      if (/^[0-9]$/.test(k) && entered.length < 6) {
+        entered += k;
+        playClick();
+        render();
+      }
+    };
   };
 
   modalEl.classList.remove('hidden');
@@ -1839,38 +1772,9 @@ document.addEventListener('visibilitychange', () => {
   else scheduleViewportChange();
 });
 
-// Drukfeedback voor toetsenbordknoppen (werkt beter op touch dan alleen :active)
-function wirePressFx(){
-  const pressables = '.kbdBtn, .padHit';
-  const clear = () => {
-    try {
-      document.querySelectorAll('.kbdBtn.isPressed, .padHit.isPressed')
-        .forEach(el => el.classList.remove('isPressed'));
-    } catch {}
-  };
-
-  // Pointer events (modern)
-  document.addEventListener('pointerdown', (e) => {
-    const el = e.target && e.target.closest ? e.target.closest(pressables) : null;
-    if (el) el.classList.add('isPressed');
-  }, true);
-  document.addEventListener('pointerup', clear, true);
-  document.addEventListener('pointercancel', clear, true);
-
-  // Fallback voor oudere touch events
-  document.addEventListener('touchstart', (e) => {
-    const t = e.targetTouches && e.targetTouches[0] ? e.targetTouches[0].target : e.target;
-    const el = t && t.closest ? t.closest(pressables) : null;
-    if (el) el.classList.add('isPressed');
-  }, { capture:true, passive:true });
-  document.addEventListener('touchend', clear, true);
-  document.addEventListener('touchcancel', clear, true);
-}
-
 window.addEventListener('hashchange', () => render());
 
 updateBadge();
-wirePressFx();
 if (!window.location.hash) navigate('#shop');
 render();
 // zorg dat portretstand meteen de camera pauzeert

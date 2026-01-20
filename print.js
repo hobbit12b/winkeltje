@@ -33,11 +33,6 @@ function money(n){
   const v = Math.round((Number(n) || 0) * 100) / 100;
   return '€ ' + v.toFixed(v % 1 === 0 ? 0 : 2);
 }
-function moneyTag(n){
-  const s = money(n);
-  return s.replace('€ ', '€');
-}
-
 
 function loadProducts(){
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -95,43 +90,45 @@ function selectedMap(){
 }
 
 function renderCards(products){
-  const cols = Number(String(colsEl.value || '3')) || 3;
+  const cols = String(colsEl.value || '3');
   const size = String(sizeEl.value || 'm');
+  const showName = !!showNameEl.checked;
   const showPrice = !!showPriceEl.checked;
   const showPhoto = !!showPhotoEl.checked;
   const picks = selectedMap();
 
-  cardsEl.setAttribute('data-cols', String(cols));
+  cardsEl.setAttribute('data-cols', cols);
 
   const px = qrPx();
   const cards = [];
   let count = 0;
 
-  const codes = Object.keys(picks).sort((a,b) => a.localeCompare(b));
-  for (const code of codes) {
+  for (const code of Object.keys(picks).sort((a,b) => a.localeCompare(b))) {
     const p = products[code];
     if (!p) continue;
+
     const qty = picks[code];
     for (let i = 0; i < qty; i += 1) {
       count += 1;
       const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encodeURIComponent(code)}`;
 
-      const photoHtml = showPhoto
-        ? `<div class="qrProductWrap"><img class="qrProductImg" src="${escapeAttr(p.photo)}" alt="" /></div>`
-        : `<div class="qrProductWrap" aria-hidden="true"></div>`;
-
-      // Prijs nooit op de QR zelf, anders kan de QR onleesbaar worden.
-      const priceHtml = showPrice ? `<div class="qrPriceCorner">${moneyTag(p.price)}</div>` : `<div class="qrPriceCorner" aria-hidden="true"></div>`;
+      const photoHtml = showPhoto ? `<img class="qrPhoto" src="${escapeAttr(p.photo)}" alt="" />` : '';
+      const nameHtml = showName ? `<div class="qrName">${escapeHtml(p.name)}</div>` : '';
+      const priceHtml = showPrice ? `<div class="qrPrice"><span aria-hidden="true">🏷️</span><span>${money(p.price)}</span></div>` : '';
 
       cards.push(`
         <div class="qrCard" data-size="${escapeAttr(size)}">
-          <div class="qrQrWrap">
+          <div class="qrImgWrap">
             <img class="qrImg" data-qr="1" data-code="${escapeAttr(code)}" src="${qrSrc}" alt="QR code ${escapeAttr(code)}" />
           </div>
-          ${photoHtml}
-          <div class="qrBottom">
-            <div class="qrBottomSpacer" aria-hidden="true"></div>
-            <div class="qrCodeBig">${escapeHtml(code)}</div>
+          <div class="qrMeta">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px">
+              <div>
+                ${nameHtml}
+                <div class="qrCode">Code, ${escapeHtml(code)}</div>
+              </div>
+              ${photoHtml}
+            </div>
             ${priceHtml}
           </div>
         </div>
@@ -139,21 +136,11 @@ function renderCards(products){
     }
   }
 
-  // Bouw rijen, zodat pagina-afbreking alleen tussen rijen gebeurt
-  if (!cards.length) {
-    cardsEl.innerHTML = `
-      <div class="card pad" style="background:rgba(255,255,255,.72); box-shadow:none">
-        <p class="p" style="margin:0">Selecteer minstens één product en zet het aantal op 1 of hoger.</p>
-      </div>
-    `;
-  } else {
-    const rows = [];
-    for (let i = 0; i < cards.length; i += cols) {
-      const chunk = cards.slice(i, i + cols).join('');
-      rows.push(`<div class="qrRow" data-cols="${cols}">${chunk}</div>`);
-    }
-    cardsEl.innerHTML = rows.join('');
-  }
+  cardsEl.innerHTML = cards.length ? cards.join('') : `
+    <div class="card pad" style="background:rgba(255,255,255,.72); box-shadow:none">
+      <p class="p" style="margin:0">Selecteer minstens één product en zet het aantal op 1 of hoger.</p>
+    </div>
+  `;
 
   const today = new Date();
   const d = today.toLocaleDateString('nl-NL');
@@ -166,7 +153,7 @@ function renderCards(products){
       const fallback = document.createElement('div');
       fallback.style.padding = '18px 10px';
       fallback.style.textAlign = 'center';
-      fallback.style.fontWeight = '800';
+      fallback.style.fontWeight = '950';
       fallback.style.fontSize = '22px';
       fallback.style.opacity = '0.85';
       fallback.textContent = code;
