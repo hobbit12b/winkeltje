@@ -218,7 +218,8 @@
 }
 
 .qrPriceCorner{
-  justify-self: end;
+  justify-self: start;
+  align-self: end;
   font-weight: 600;
   font-size: 30px;
   letter-spacing: .2px;
