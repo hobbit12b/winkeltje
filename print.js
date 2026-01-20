@@ -11,7 +11,6 @@ const showNameEl = $('#showName');
 const showPriceEl = $('#showPrice');
 const showPhotoEl = $('#showPhoto');
 const colsEl = $('#cols');
-const sizeEl = $('#size');
 
 const printBtn = $('#printBtn');
 const closeBtn = $('#closeBtn');
@@ -71,12 +70,8 @@ function loadProducts(){
   }
 }
 
-function qrPx(){
-  const s = String(sizeEl.value || 'm');
-  if (s === 's') return 180;
-  if (s === 'l') return 260;
-  return 220;
-}
+const QR_PX = 220;
+
 
 function buildPicker(products){
   const list = Object.values(products).sort((a,b) => String(a.code).localeCompare(String(b.code)));
@@ -117,14 +112,14 @@ function selectedMap(){
 
 function renderCards(products){
   const cols = Number(String(colsEl.value || '3')) || 3;
-  const size = String(sizeEl.value || 'm');
+  const size = 'm';
   const showPrice = !!showPriceEl.checked;
   const showPhoto = !!showPhotoEl.checked;
   const picks = selectedMap();
 
   cardsEl.setAttribute('data-cols', String(cols));
 
-  const px = qrPx();
+  const px = QR_PX;
   const cards = [];
   let count = 0;
 
@@ -203,9 +198,7 @@ function wireUp(products){
   showPriceEl.addEventListener('change', rerender);
   showPhotoEl.addEventListener('change', rerender);
   colsEl.addEventListener('change', rerender);
-  sizeEl.addEventListener('change', rerender);
-
-  pickerEl.addEventListener('input', (e) => {
+pickerEl.addEventListener('input', (e) => {
     const t = e.target;
     if (!t) return;
     if (t.matches('input.pick') || t.matches('input.qty')) rerender();

@@ -1,6 +1,11 @@
 .printBody{
   background: #f6f2ea;
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
+
 
 .printTop{
   position: sticky;
@@ -168,9 +173,7 @@
   box-shadow: 0 1px 0 rgba(0,0,0,.05);
 }
 
-.qrCard[data-size="s"]{ min-height: 150px; }
 .qrCard[data-size="m"]{ min-height: 190px; }
-.qrCard[data-size="l"]{ min-height: 240px; }
 
 .qrQrWrap{
   border-radius: 16px;
@@ -226,9 +229,7 @@
 
 .qrBottomSpacer{justify-self:start;}
 
-.qrCard[data-size="s"]{ --prodW: 90px; }
 .qrCard[data-size="m"]{ --prodW: 110px; }
-.qrCard[data-size="l"]{ --prodW: 138px; }
 
 @media print{
   .printTop{ display:none; }
