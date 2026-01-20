@@ -112,20 +112,30 @@ function renderCards(products){
       count += 1;
       const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encodeURIComponent(code)}`;
 
-      const nameHtml = showName ? `<div class="qrName">${escapeHtml(p.name)}</div>` : '';
-      // In de printlayout willen we onderaan altijd: code links, foto midden, prijs rechts
-      const footerPhoto = p.photo ? `<img class="qrFooterPhotoImg" src="${escapeAttr(p.photo)}" alt="" />` : '';
+      // Onder de QR: naam links en prijs rechts, op 1 regel (zonder kader)
+      const titleRowHtml = (showName || showPrice)
+        ? `
+          <div class="qrTitleRow">
+            ${showName ? `<div class="qrName">${escapeHtml(p.name)}</div>` : ''}
+            ${showPrice ? `<div class="qrPriceInline">${money(p.price)}</div>` : ''}
+          </div>
+        `
+        : '';
+
+      // Onderste regel: code linksonder (blauw) en productplaatje rechtsonder
+      const footerPhoto = (showPhoto && p.photo)
+        ? `<img class="qrFooterPhotoImg" src="${escapeAttr(p.photo)}" alt="" />`
+        : '';
 
       cards.push(`
         <div class="qrCard" data-size="${escapeAttr(size)}">
           <div class="qrImgWrap">
             <img class="qrImg" data-qr="1" data-code="${escapeAttr(code)}" src="${qrSrc}" alt="QR code ${escapeAttr(code)}" />
           </div>
-          ${nameHtml}
+          ${titleRowHtml}
           <div class="qrFooter" aria-label="Productinfo">
             <div class="qrFooterCode">${escapeHtml(code)}</div>
             <div class="qrFooterPhoto">${footerPhoto}</div>
-            <div class="qrFooterPrice">${money(p.price)}</div>
           </div>
         </div>
       `);

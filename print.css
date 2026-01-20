@@ -179,28 +179,41 @@
   display: block;
 }
 
+.qrTitleRow{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .qrName{
   font-weight: 950;
   letter-spacing: .2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.qrPriceInline{
+  font-weight: 950;
+  letter-spacing: .2px;
+  white-space: nowrap;
 }
 
 .qrFooter{
-  display: grid;
-  grid-template-columns: 1fr 64px 1fr;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(0,0,0,.08);
+  padding-top: 4px;
 }
 
 .qrFooterCode{
   font-weight: 950;
-  opacity: .85;
-  justify-self: start;
+  color: #1d63d6;
+  opacity: .95;
 }
 
 .qrFooterPhoto{
-  justify-self: center;
   width: 44px;
   height: 44px;
   border-radius: 14px;

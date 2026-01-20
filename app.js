@@ -1222,8 +1222,10 @@ function wireSvgKeypad(rootEl, onKey){
 }
 
 function openManualEntry(prefill = ''){
-  stopCamera();
+  // Laat het camerabeeld aan staan, we pauzeren alleen het scannen.
+  // Zo kan de leerling na sluiten meteen weer verder scannen.
   window.__isScanning = false;
+  stopScanLoop({ stopStream: false });
 
   let entered = String(prefill || '').replace(/\D/g,'').slice(0,6);
 
@@ -1247,7 +1249,8 @@ function openManualEntry(prefill = ''){
 
     wireSvgKeypad($('#manualPad'), (k) => {
       if (k === 'Wis') {
-        entered = entered.slice(0, -1);
+        // Rode kruisje: maak de hele regel leeg
+        entered = '';
         playClick();
         render();
         return;
@@ -1357,6 +1360,21 @@ function closeModal(){
   modalEl.classList.add('hidden');
   modalEl.classList.remove('modal--qty');
   modalCard.innerHTML = '';
+
+  // Als de leerling aan het scannen was: na sluiten meteen weer camerabeeld + scanloop actief.
+  // Belangrijk: alleen als we op het winkelscherm zitten en er geen productvenster open staat.
+  try {
+    const inShop = (window.location.hash || '#shop') === '#shop';
+    const hasVideo = Boolean(document.getElementById('video'));
+    if (inShop && window.__gameStarted && hasVideo && !teacherFlowOpen && !window.__currentScannedProduct && !isPortrait()) {
+      window.__isScanning = true;
+      setCameraActive(true);
+      startScanLoop();
+      resetInactivityTimer();
+    }
+  } catch {
+    // ignore
+  }
 }
 
 function escapeHtml(s){
