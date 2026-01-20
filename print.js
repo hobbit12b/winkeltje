@@ -44,7 +44,28 @@ function loadProducts(){
   if (!raw) return {};
   try {
     const data = JSON.parse(raw);
-    return data && data.products ? data.products : {};
+    const products = data && data.products ? data.products : {};
+
+    // v4 migratie: standaardcodes starten bij 100 (voorheen 101)
+    const storedVersion = Number(data?.catalogVersion) || 0;
+    if (storedVersion > 0 && storedVersion < 4 && products['101'] && !products['100']) {
+      const map = {
+        '101':'100','102':'101','103':'102','104':'103','105':'104','106':'105','107':'106','108':'107','109':'108','110':'109',
+        '111':'110','112':'111','113':'112','114':'113','115':'114','116':'115','117':'116','118':'117','119':'118','120':'119',
+        '121':'120','122':'121','123':'122','124':'123','125':'124','126':'125','127':'126','128':'127','129':'128','130':'129',
+        '131':'130','132':'131','133':'132','134':'133','135':'134'
+      };
+      const next = { ...products };
+      for (const [oldCode, newCode] of Object.entries(map)) {
+        const p = next[oldCode];
+        if (!p) continue;
+        if (!next[newCode]) next[newCode] = { ...p, code: newCode };
+        delete next[oldCode];
+      }
+      return next;
+    }
+
+    return products;
   } catch {
     return {};
   }
@@ -116,21 +137,23 @@ function renderCards(products){
       count += 1;
       const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encodeURIComponent(code)}`;
 
-      const photoHtml = showPhoto ? `<img class="qrPhoto" src="${escapeAttr(p.photo)}" alt="" />` : '';
+      const photoHtml = showPhoto
+        ? `<div class="qrProductWrap"><img class="qrProductImg" src="${escapeAttr(p.photo)}" alt="" /></div>`
+        : `<div class="qrProductWrap" aria-hidden="true"></div>`;
+
       // Prijs nooit op de QR zelf, anders kan de QR onleesbaar worden.
-      const priceHtml = showPrice ? `<div class="qrPrice">${moneyTag(p.price)}</div>` : '';
+      const priceHtml = showPrice ? `<div class="qrPriceCorner">${moneyTag(p.price)}</div>` : `<div class="qrPriceCorner" aria-hidden="true"></div>`;
 
       cards.push(`
         <div class="qrCard" data-size="${escapeAttr(size)}">
-          <div class="qrImgWrap">
+          <div class="qrQrWrap">
             <img class="qrImg" data-qr="1" data-code="${escapeAttr(code)}" src="${qrSrc}" alt="QR code ${escapeAttr(code)}" />
           </div>
-          <div class="qrMeta">
-            <div class="qrMetaRow">
-              <div class="qrName">${escapeHtml(code)}</div>
-              ${priceHtml}
-              ${photoHtml}
-            </div>
+          ${photoHtml}
+          <div class="qrBottom">
+            <div class="qrBottomSpacer" aria-hidden="true"></div>
+            <div class="qrCodeBig">${escapeHtml(code)}</div>
+            ${priceHtml}
           </div>
         </div>
       `);

@@ -14,44 +14,53 @@ const cartMiniTotal = $('#cartMiniTotal');
 const cartMiniBadge = $('#cartMiniBadge');
 
 const STORAGE_KEY = 'kleuterwinkel.v1';
-const DEFAULT_CATALOG_VERSION = 3;
+const DEFAULT_CATALOG_VERSION = 4;
 
 const DEFAULT_PRODUCTS = {
-  '101': { code: '101', name: 'Banaan', price: 1, photo: 'assets/banaan.png' },
-  '102': { code: '102', name: 'Sinaasappel', price: 1, photo: 'assets/sinaasappel.png' },
-  '103': { code: '103', name: 'Brood', price: 2, photo: 'assets/brood.png' },
-  '104': { code: '104', name: 'Croissant', price: 1, photo: 'assets/croissant.png' },
-  '105': { code: '105', name: 'Melk', price: 2, photo: 'assets/melk.png' },
-  '106': { code: '106', name: 'Boter', price: 2, photo: 'assets/boter.png' },
-  '107': { code: '107', name: 'Ei', price: 1, photo: 'assets/ei.png' },
-  '108': { code: '108', name: 'Eierdoos', price: 3, photo: 'assets/eierdoos.png' },
-  '109': { code: '109', name: 'Worst', price: 2, photo: 'assets/worst.png' },
-  '110': { code: '110', name: 'Ijs', price: 2, photo: 'assets/ijs.png' },
-  '111': { code: '111', name: 'Soep', price: 2, photo: 'assets/soep.png' },
-  '112': { code: '112', name: 'Snoep', price: 1, photo: 'assets/snoep.png' },
-  '113': { code: '113', name: 'Chocolade', price: 2, photo: 'assets/chocolade.png' },
-  '114': { code: '114', name: 'Appel', price: 1, photo: 'assets/appel.png' },
-  '115': { code: '115', name: 'Peer', price: 1, photo: 'assets/peer.png' },
-  '116': { code: '116', name: 'Druiven', price: 1, photo: 'assets/druiven.png' },
-  '117': { code: '117', name: 'Mandarijn', price: 1, photo: 'assets/mandarijn.png' },
-  '118': { code: '118', name: 'Wortel', price: 1, photo: 'assets/wortel.png' },
-  '119': { code: '119', name: 'Mais', price: 1, photo: 'assets/mais.png' },
-  '120': { code: '120', name: 'Hamburger', price: 2, photo: 'assets/hamburger.png' },
-  '121': { code: '121', name: 'Hagelslag', price: 2, photo: 'assets/hagelslag.png' },
-  '122': { code: '122', name: 'Choco Pops', price: 2, photo: 'assets/choco_pops.png' },
-  '123': { code: '123', name: 'Drinkyoghurt', price: 2, photo: 'assets/drinkyoghurt.png' },
-  '124': { code: '124', name: 'Sap', price: 1, photo: 'assets/sap.png' },
-  '125': { code: '125', name: 'Appelsap', price: 2, photo: 'assets/appelsap.png' },
-  '126': { code: '126', name: 'Chocomel', price: 1, photo: 'assets/chocomel.png' },
-  '127': { code: '127', name: 'Koffiemelk', price: 2, photo: 'assets/koffiemelk.png' },
-  '128': { code: '128', name: 'Cappuccino', price: 2, photo: 'assets/cappuccino.png' },
-  '129': { code: '129', name: 'Thee', price: 2, photo: 'assets/thee.png' },
-  '130': { code: '130', name: 'Potje', price: 2, photo: 'assets/potje.png' },
-  '131': { code: '131', name: 'Kruiden', price: 2, photo: 'assets/kruiden.png' },
-  '132': { code: '132', name: 'Philadelphia', price: 3, photo: 'assets/philadelphia.png' },
-  '133': { code: '133', name: 'Koekjes', price: 1, photo: 'assets/koekjes.png' },
-  '134': { code: '134', name: 'Bonbon', price: 2, photo: 'assets/bonbon.png' },
-  '135': { code: '135', name: 'Chocola', price: 1, photo: 'assets/chocola.png' }
+  '100': { code: '100', name: 'Banaan', price: 1, photo: 'assets/banaan.png' },
+  '101': { code: '101', name: 'Sinaasappel', price: 1, photo: 'assets/sinaasappel.png' },
+  '102': { code: '102', name: 'Brood', price: 2, photo: 'assets/brood.png' },
+  '103': { code: '103', name: 'Croissant', price: 1, photo: 'assets/croissant.png' },
+  '104': { code: '104', name: 'Melk', price: 2, photo: 'assets/melk.png' },
+  '105': { code: '105', name: 'Boter', price: 2, photo: 'assets/boter.png' },
+  '106': { code: '106', name: 'Ei', price: 1, photo: 'assets/ei.png' },
+  '107': { code: '107', name: 'Eierdoos', price: 3, photo: 'assets/eierdoos.png' },
+  '108': { code: '108', name: 'Worst', price: 2, photo: 'assets/worst.png' },
+  '109': { code: '109', name: 'Ijs', price: 2, photo: 'assets/ijs.png' },
+  '110': { code: '110', name: 'Soep', price: 2, photo: 'assets/soep.png' },
+  '111': { code: '111', name: 'Snoep', price: 1, photo: 'assets/snoep.png' },
+  '112': { code: '112', name: 'Chocolade', price: 2, photo: 'assets/chocolade.png' },
+  '113': { code: '113', name: 'Appel', price: 1, photo: 'assets/appel.png' },
+  '114': { code: '114', name: 'Peer', price: 1, photo: 'assets/peer.png' },
+  '115': { code: '115', name: 'Druiven', price: 1, photo: 'assets/druiven.png' },
+  '116': { code: '116', name: 'Mandarijn', price: 1, photo: 'assets/mandarijn.png' },
+  '117': { code: '117', name: 'Wortel', price: 1, photo: 'assets/wortel.png' },
+  '118': { code: '118', name: 'Mais', price: 1, photo: 'assets/mais.png' },
+  '119': { code: '119', name: 'Hamburger', price: 2, photo: 'assets/hamburger.png' },
+  '120': { code: '120', name: 'Hagelslag', price: 2, photo: 'assets/hagelslag.png' },
+  '121': { code: '121', name: 'Choco Pops', price: 2, photo: 'assets/choco_pops.png' },
+  '122': { code: '122', name: 'Drinkyoghurt', price: 2, photo: 'assets/drinkyoghurt.png' },
+  '123': { code: '123', name: 'Sap', price: 1, photo: 'assets/sap.png' },
+  '124': { code: '124', name: 'Appelsap', price: 2, photo: 'assets/appelsap.png' },
+  '125': { code: '125', name: 'Chocomel', price: 1, photo: 'assets/chocomel.png' },
+  '126': { code: '126', name: 'Koffiemelk', price: 2, photo: 'assets/koffiemelk.png' },
+  '127': { code: '127', name: 'Cappuccino', price: 2, photo: 'assets/cappuccino.png' },
+  '128': { code: '128', name: 'Thee', price: 2, photo: 'assets/thee.png' },
+  '129': { code: '129', name: 'Potje', price: 2, photo: 'assets/potje.png' },
+  '130': { code: '130', name: 'Kruiden', price: 2, photo: 'assets/kruiden.png' },
+  '131': { code: '131', name: 'Philadelphia', price: 3, photo: 'assets/philadelphia.png' },
+  '132': { code: '132', name: 'Koekjes', price: 1, photo: 'assets/koekjes.png' },
+  '133': { code: '133', name: 'Bonbon', price: 2, photo: 'assets/bonbon.png' },
+  '134': { code: '134', name: 'Chocola', price: 1, photo: 'assets/chocola.png' },
+
+  '135': { code: '135', name: 'Banaan 2', price: 1, photo: 'assets/banaan_2.png' },
+  '136': { code: '136', name: 'Appel 2', price: 1, photo: 'assets/appel_2.png' },
+  '137': { code: '137', name: 'Sinaasappel 2', price: 1, photo: 'assets/sinaasappel_2.png' },
+  '138': { code: '138', name: 'Boter 2', price: 2, photo: 'assets/boter_2.png' },
+  '139': { code: '139', name: 'Boter 3', price: 2, photo: 'assets/boter_3.png' },
+  '140': { code: '140', name: 'Melk 2', price: 2, photo: 'assets/melk_2.png' },
+  '141': { code: '141', name: 'Ijs 2', price: 2, photo: 'assets/ijs_2.png' },
+  '142': { code: '142', name: 'Soep 2', price: 2, photo: 'assets/soep_2.png' }
 };
 
 const state = loadState();
@@ -237,6 +246,41 @@ function loadState(){
 
     const teacherPin = typeof data.teacherPin === 'string' ? data.teacherPin : '1234';
     const storedVersion = Number(data.catalogVersion) || 0;
+
+    // v4: standaardcodes starten bij 100 (voorheen 101). We migreren bestaande data 1x.
+    if (storedVersion > 0 && storedVersion < 4) {
+      const map = {
+        '101':'100','102':'101','103':'102','104':'103','105':'104','106':'105','107':'106','108':'107','109':'108','110':'109',
+        '111':'110','112':'111','113':'112','114':'113','115':'114','116':'115','117':'116','118':'117','119':'118','120':'119',
+        '121':'120','122':'121','123':'122','124':'123','125':'124','126':'125','127':'126','128':'127','129':'128','130':'129',
+        '131':'130','132':'131','133':'132','134':'133','135':'134'
+      };
+
+      // Alleen migreren als het echt nog de oude set is
+      const hasOld = data?.products && data.products['101'] && !data.products['100'];
+      if (hasOld) {
+        // producten
+        const nextProducts = { ...(data.products || {}) };
+        for (const [oldCode, newCode] of Object.entries(map)) {
+          const p = nextProducts[oldCode];
+          if (!p) continue;
+          if (!nextProducts[newCode]) {
+            nextProducts[newCode] = { ...p, code: newCode };
+          }
+          delete nextProducts[oldCode];
+        }
+        data.products = nextProducts;
+
+        // mandje
+        for (const line of cartLines) {
+          const nc = map[String(line?.code || '').trim()];
+          if (nc) line.code = nc;
+        }
+
+        // We willen na de migratie opslaan, zodat print.html ook meteen goed zit
+        window.__needsCatalogSave = true;
+      }
+    }
 
     if (storedVersion < DEFAULT_CATALOG_VERSION) window.__needsCatalogSave = true;
 
@@ -1224,7 +1268,7 @@ function openManualEntry(prefill = ''){
         </div>
 
         <div class="manualPadImg" id="manualPadImg" aria-label="Toetsenbord">
-          <button class="padHit" data-k="CLOSE" aria-label="Sluiten" style="left:82%; top:14%; width:16%; height:16%"></button>
+          <button class="padHit" data-k="CLEAR" aria-label="Alles wissen" style="left:82%; top:14%; width:16%; height:16%"></button>
 
           <button class="padHit" data-k="1" aria-label="1" style="left:18%; top:36%; width:24%; height:16%"></button>
           <button class="padHit" data-k="2" aria-label="2" style="left:50%; top:36%; width:24%; height:16%"></button>
@@ -1247,14 +1291,25 @@ function openManualEntry(prefill = ''){
 
     const pad = $('#manualPadImg');
     if (pad) {
+      // Drukfeedback (werkt beter op iPad dan alleen :active)
+      pad.querySelectorAll('.padHit').forEach((btn) => {
+        const down = () => btn.classList.add('isPressed');
+        const up = () => setTimeout(() => btn.classList.remove('isPressed'), 80);
+        btn.addEventListener('pointerdown', down, { passive: true });
+        btn.addEventListener('pointerup', up, { passive: true });
+        btn.addEventListener('pointercancel', up, { passive: true });
+        btn.addEventListener('pointerleave', up, { passive: true });
+      });
+
       pad.onclick = (e) => {
         const btn = e.target.closest('button');
         if (!btn) return;
         const k = btn.getAttribute('data-k');
         if (!k) return;
-        if (k === 'CLOSE') {
+        if (k === 'CLEAR') {
+          entered = '';
           playClick();
-          closeModal();
+          render();
           return;
         }
         if (k === 'Wis') {
@@ -1829,9 +1884,38 @@ document.addEventListener('visibilitychange', () => {
   else scheduleViewportChange();
 });
 
+// Drukfeedback voor toetsenbordknoppen (werkt beter op touch dan alleen :active)
+function wirePressFx(){
+  const pressables = '.kbdBtn, .padHit';
+  const clear = () => {
+    try {
+      document.querySelectorAll('.kbdBtn.isPressed, .padHit.isPressed')
+        .forEach(el => el.classList.remove('isPressed'));
+    } catch {}
+  };
+
+  // Pointer events (modern)
+  document.addEventListener('pointerdown', (e) => {
+    const el = e.target && e.target.closest ? e.target.closest(pressables) : null;
+    if (el) el.classList.add('isPressed');
+  }, true);
+  document.addEventListener('pointerup', clear, true);
+  document.addEventListener('pointercancel', clear, true);
+
+  // Fallback voor oudere touch events
+  document.addEventListener('touchstart', (e) => {
+    const t = e.targetTouches && e.targetTouches[0] ? e.targetTouches[0].target : e.target;
+    const el = t && t.closest ? t.closest(pressables) : null;
+    if (el) el.classList.add('isPressed');
+  }, { capture:true, passive:true });
+  document.addEventListener('touchend', clear, true);
+  document.addEventListener('touchcancel', clear, true);
+}
+
 window.addEventListener('hashchange', () => render());
 
 updateBadge();
+wirePressFx();
 if (!window.location.hash) navigate('#shop');
 render();
 // zorg dat portretstand meteen de camera pauzeert
