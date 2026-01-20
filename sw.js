@@ -1,4 +1,4 @@
-const CACHE = 'kleuterwinkel-v17';
+const CACHE = 'kleuterwinkel-v18';
 const ASSETS = [
   './',
   './index.html',

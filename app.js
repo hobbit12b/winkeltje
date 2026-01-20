@@ -1247,6 +1247,16 @@ function openManualEntry(prefill = ''){
 
     const pad = $('#manualPadImg');
     if (pad) {
+      // Drukfeedback (werkt beter op iPad dan alleen :active)
+      pad.querySelectorAll('.padHit').forEach((btn) => {
+        const down = () => btn.classList.add('isPressed');
+        const up = () => setTimeout(() => btn.classList.remove('isPressed'), 80);
+        btn.addEventListener('pointerdown', down, { passive: true });
+        btn.addEventListener('pointerup', up, { passive: true });
+        btn.addEventListener('pointercancel', up, { passive: true });
+        btn.addEventListener('pointerleave', up, { passive: true });
+      });
+
       pad.onclick = (e) => {
         const btn = e.target.closest('button');
         if (!btn) return;
@@ -1829,9 +1839,38 @@ document.addEventListener('visibilitychange', () => {
   else scheduleViewportChange();
 });
 
+// Drukfeedback voor toetsenbordknoppen (werkt beter op touch dan alleen :active)
+function wirePressFx(){
+  const pressables = '.kbdBtn, .padHit';
+  const clear = () => {
+    try {
+      document.querySelectorAll('.kbdBtn.isPressed, .padHit.isPressed')
+        .forEach(el => el.classList.remove('isPressed'));
+    } catch {}
+  };
+
+  // Pointer events (modern)
+  document.addEventListener('pointerdown', (e) => {
+    const el = e.target && e.target.closest ? e.target.closest(pressables) : null;
+    if (el) el.classList.add('isPressed');
+  }, true);
+  document.addEventListener('pointerup', clear, true);
+  document.addEventListener('pointercancel', clear, true);
+
+  // Fallback voor oudere touch events
+  document.addEventListener('touchstart', (e) => {
+    const t = e.targetTouches && e.targetTouches[0] ? e.targetTouches[0].target : e.target;
+    const el = t && t.closest ? t.closest(pressables) : null;
+    if (el) el.classList.add('isPressed');
+  }, { capture:true, passive:true });
+  document.addEventListener('touchend', clear, true);
+  document.addEventListener('touchcancel', clear, true);
+}
+
 window.addEventListener('hashchange', () => render());
 
 updateBadge();
+wirePressFx();
 if (!window.location.hash) navigate('#shop');
 render();
 // zorg dat portretstand meteen de camera pauzeert
