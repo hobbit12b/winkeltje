@@ -1271,6 +1271,13 @@ function openManualEntry(prefill = ''){
 
   let entered = String(prefill || '').replace(/\D/g,'').slice(0,6);
 
+  const closeAndResumeScan = () => {
+    closeModal();
+    window.__isScanning = true;
+    // Start camera opnieuw (voorkomt zwart beeld)
+    setTimeout(() => { try { startScanning(); resetInactivityTimer(); } catch {} }, 0);
+  };
+
   const render = () => {
     const shown = entered || '…';
     modalCard.innerHTML = `
@@ -1319,9 +1326,9 @@ function openManualEntry(prefill = ''){
         const k = btn.getAttribute('data-k');
         if (!k) return;
         if (k === 'CLEAR') {
-          entered = '';
+          // Rode kruis: sluit het venster en ga terug naar scannen
           playClick();
-          render();
+          closeAndResumeScan();
           return;
         }
         if (k === 'Wis') {
@@ -1348,7 +1355,7 @@ function openManualEntry(prefill = ''){
 
   modalEl.classList.remove('hidden');
   $('.modal__overlay').onclick = (e) => {
-    if (e.target && e.target.getAttribute('data-close') === '1') closeModal();
+    if (e.target && e.target.getAttribute('data-close') === '1') closeAndResumeScan();
   };
   render();
 }
