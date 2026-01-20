@@ -142,16 +142,22 @@
 }
 
 .cards{
-  display:block;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
 }
 
 .qrRow{
-  display:flex;
-  gap:10px;
-  margin-bottom:10px;
+  display:grid;
+  gap: 10px;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
+.qrRow[data-cols="2"]{ grid-template-columns: repeat(2, 1fr); }
+.qrRow[data-cols="3"]{ grid-template-columns: repeat(3, 1fr); }
+.qrRow[data-cols="4"]{ grid-template-columns: repeat(4, 1fr); }
+
 .qrCard{
-  flex: 1 1 0;
   background: rgba(255,255,255,.78);
   border: 1px solid rgba(0,0,0,.10);
   border-radius: 18px;
@@ -167,6 +173,7 @@
 
 .qrImgWrap{
   position: relative;
+  overflow: visible;
   border-radius: 16px;
   background: rgba(246,242,234,.7);
   border: 1px solid rgba(0,0,0,.06);
@@ -179,16 +186,18 @@
   width: 100%;
   height: auto;
   display: block;
+  transform: translateX(8px) scale(0.92);
+  transform-origin: center;
 }
 
 .qrBadge{
   position:absolute;
-  left:8px;
-  bottom:8px;
-  padding:6px 10px;
-  border-radius:14px;
+  left: 10px;
+  bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 12px;
   background: rgba(255,255,255,.92);
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(0,0,0,.10);
   font-weight: 700;
   font-size: 18px;
   letter-spacing: .2px;
@@ -199,25 +208,33 @@
   gap: 4px;
 }
 
+.qrMetaRow{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qrMetaRow .qrPhoto{
+  margin-left: auto;
+}
+
 .qrName{
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: .2px;
 }
 
 .qrCode{
-  font-weight: 600;
+  font-weight: 900;
   opacity: .75;
 }
 
 .qrPrice{
-  display: none;
-  /* legacy */
-  align-items: center;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
   border-radius: 999px;
-  font-weight: 950;
+  font-weight: 700;
   background: rgba(244,198,79,.25);
   border: 1px solid rgba(244,198,79,.45);
   width: fit-content;
@@ -233,9 +250,6 @@
 }
 
 @media print{
-  .sheetMeta{ display:none; }
-  .qrRow{ break-inside: avoid; page-break-inside: avoid; }
-
   .printTop{ display:none; }
   .controls{ display:none; }
   .printMain{ padding: 0; max-width: none; }
@@ -245,17 +259,4 @@
     page-break-inside: avoid;
   }
   @page{ margin: 10mm; }
-}
-
-.qrBottom{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  padding-top:2px;
-}
-.qrCodeOnly{
-  font-weight: 600;
-  font-size: 18px;
-  opacity: .85;
 }

@@ -7,6 +7,8 @@ const pickerEl = $('#picker');
 const cardsEl = $('#cards');
 const sheetMetaEl = $('#sheetMeta');
 
+const showNameEl = $('#showName');
+const showPriceEl = $('#showPrice');
 const showPhotoEl = $('#showPhoto');
 const colsEl = $('#cols');
 const sizeEl = $('#size');
@@ -27,12 +29,15 @@ function escapeAttr(s){
   return escapeHtml(s).replaceAll('\n', ' ');
 }
 
-function moneyTag(n){
-  const v = Number(n) || 0;
-  const digits = (Math.round(v * 100) % 100 === 0) ? 0 : 2;
-  const txt = v.toLocaleString('nl-NL', { minimumFractionDigits: digits, maximumFractionDigits: 2 });
-  return `€${txt}`;
+function money(n){
+  const v = Math.round((Number(n) || 0) * 100) / 100;
+  return '€ ' + v.toFixed(v % 1 === 0 ? 0 : 2);
 }
+function moneyTag(n){
+  const s = money(n);
+  return s.replace('€ ', '€');
+}
+
 
 function loadProducts(){
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -89,15 +94,10 @@ function selectedMap(){
   return map;
 }
 
-function chunk(arr, size){
-  const out = [];
-  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-  return out;
-}
-
 function renderCards(products){
-  const cols = Math.max(2, Math.min(4, Number(colsEl.value || 3)));
+  const cols = Number(String(colsEl.value || '3')) || 3;
   const size = String(sizeEl.value || 'm');
+  const showPrice = !!showPriceEl.checked;
   const showPhoto = !!showPhotoEl.checked;
   const picks = selectedMap();
 
@@ -107,42 +107,52 @@ function renderCards(products){
   const cards = [];
   let count = 0;
 
-  for (const code of Object.keys(picks).sort((a,b) => a.localeCompare(b))) {
+  const codes = Object.keys(picks).sort((a,b) => a.localeCompare(b));
+  for (const code of codes) {
     const p = products[code];
     if (!p) continue;
-
     const qty = picks[code];
     for (let i = 0; i < qty; i += 1) {
       count += 1;
+      const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encodeURIComponent(code)}`;
 
-      // Hoge foutcorrectie zodat een klein prijslabel in de marge netjes blijft scannen
-      const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&ecc=H&margin=12&data=${encodeURIComponent(code)}`;
-      const photoHtml = showPhoto ? `<img class="qrPhoto" src="${escapeAttr(p.photo)}" alt="" />` : '';
+      const photoHtml = showPhoto
+        ? `<div class="qrProductWrap"><img class="qrProductImg" src="${escapeAttr(p.photo)}" alt="" /></div>`
+        : `<div class="qrProductWrap" aria-hidden="true"></div>`;
+
+      // Prijs nooit op de QR zelf, anders kan de QR onleesbaar worden.
+      const priceHtml = showPrice ? `<div class="qrPriceCorner">${moneyTag(p.price)}</div>` : `<div class="qrPriceCorner" aria-hidden="true"></div>`;
 
       cards.push(`
         <div class="qrCard" data-size="${escapeAttr(size)}">
-          <div class="qrImgWrap">
+          <div class="qrQrWrap">
             <img class="qrImg" data-qr="1" data-code="${escapeAttr(code)}" src="${qrSrc}" alt="QR code ${escapeAttr(code)}" />
-            <div class="qrBadge" aria-hidden="true">${moneyTag(p.price)}</div>
           </div>
+          ${photoHtml}
           <div class="qrBottom">
-            ${photoHtml}
-            <div class="qrCodeOnly">${escapeHtml(code)}</div>
+            <div class="qrBottomSpacer" aria-hidden="true"></div>
+            <div class="qrCodeBig">${escapeHtml(code)}</div>
+            ${priceHtml}
           </div>
         </div>
       `);
     }
   }
 
+  // Bouw rijen, zodat pagina-afbreking alleen tussen rijen gebeurt
   if (!cards.length) {
     cardsEl.innerHTML = `
       <div class="card pad" style="background:rgba(255,255,255,.72); box-shadow:none">
-        <p class="p" style="margin:0">Selecteer minstens een product en zet het aantal op 1 of hoger.</p>
+        <p class="p" style="margin:0">Selecteer minstens één product en zet het aantal op 1 of hoger.</p>
       </div>
     `;
   } else {
-    const rows = chunk(cards, cols).map(row => `<div class="qrRow">${row.join('')}</div>`).join('');
-    cardsEl.innerHTML = rows;
+    const rows = [];
+    for (let i = 0; i < cards.length; i += cols) {
+      const chunk = cards.slice(i, i + cols).join('');
+      rows.push(`<div class="qrRow" data-cols="${cols}">${chunk}</div>`);
+    }
+    cardsEl.innerHTML = rows.join('');
   }
 
   const today = new Date();
@@ -156,7 +166,7 @@ function renderCards(products){
       const fallback = document.createElement('div');
       fallback.style.padding = '18px 10px';
       fallback.style.textAlign = 'center';
-      fallback.style.fontWeight = '900';
+      fallback.style.fontWeight = '800';
       fallback.style.fontSize = '22px';
       fallback.style.opacity = '0.85';
       fallback.textContent = code;
@@ -168,6 +178,8 @@ function renderCards(products){
 function wireUp(products){
   const rerender = () => renderCards(products);
 
+  showNameEl.addEventListener('change', rerender);
+  showPriceEl.addEventListener('change', rerender);
   showPhotoEl.addEventListener('change', rerender);
   colsEl.addEventListener('change', rerender);
   sizeEl.addEventListener('change', rerender);
@@ -181,7 +193,12 @@ function wireUp(products){
   printBtn.addEventListener('click', () => window.print());
 
   closeBtn.addEventListener('click', () => {
-    try { window.close(); } catch {}
+    try {
+      window.close();
+    } catch {
+      // ignore
+    }
+    // If tab cannot close, go back to the app
     setTimeout(() => {
       if (!document.hidden) window.location.href = 'index.html#home';
     }, 120);
