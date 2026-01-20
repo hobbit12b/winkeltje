@@ -14,20 +14,20 @@ const cartMiniTotal = $('#cartMiniTotal');
 const cartMiniBadge = $('#cartMiniBadge');
 
 const STORAGE_KEY = 'kleuterwinkel.v1';
-const DEFAULT_CATALOG_VERSION = 4;
+const DEFAULT_CATALOG_VERSION = 5;
 
 const DEFAULT_PRODUCTS = {
   '100': { code: '100', name: 'Banaan', price: 1, photo: 'assets/banaan.png' },
-  '101': { code: '101', name: 'Sinaasappel', price: 1, photo: 'assets/sinaasappel.png' },
-  '102': { code: '102', name: 'Brood', price: 2, photo: 'assets/brood.png' },
+  '101': { code: '101', name: 'Sinaasappel', price: 2, photo: 'assets/sinaasappel.png' },
+  '102': { code: '102', name: 'Brood', price: 1, photo: 'assets/brood.png' },
   '103': { code: '103', name: 'Croissant', price: 1, photo: 'assets/croissant.png' },
   '104': { code: '104', name: 'Melk', price: 2, photo: 'assets/melk.png' },
-  '105': { code: '105', name: 'Boter', price: 2, photo: 'assets/boter.png' },
+  '105': { code: '105', name: 'Boter', price: 1, photo: 'assets/boter.png' },
   '106': { code: '106', name: 'Ei', price: 1, photo: 'assets/ei.png' },
   '107': { code: '107', name: 'Eierdoos', price: 3, photo: 'assets/eierdoos.png' },
-  '108': { code: '108', name: 'Worst', price: 2, photo: 'assets/worst.png' },
-  '109': { code: '109', name: 'Ijs', price: 2, photo: 'assets/ijs.png' },
-  '110': { code: '110', name: 'Soep', price: 2, photo: 'assets/soep.png' },
+  '108': { code: '108', name: 'Worst', price: 1, photo: 'assets/worst.png' },
+  '109': { code: '109', name: 'IJs', price: 2, photo: 'assets/ijs.png' },
+  '110': { code: '110', name: 'Soep', price: 1, photo: 'assets/soep.png' },
   '111': { code: '111', name: 'Snoep', price: 1, photo: 'assets/snoep.png' },
   '112': { code: '112', name: 'Chocolade', price: 2, photo: 'assets/chocolade.png' },
   '113': { code: '113', name: 'Appel', price: 1, photo: 'assets/appel.png' },
@@ -36,23 +36,22 @@ const DEFAULT_PRODUCTS = {
   '116': { code: '116', name: 'Mandarijn', price: 1, photo: 'assets/mandarijn.png' },
   '117': { code: '117', name: 'Wortel', price: 1, photo: 'assets/wortel.png' },
   '118': { code: '118', name: 'Mais', price: 1, photo: 'assets/mais.png' },
-  '119': { code: '119', name: 'Hamburger', price: 2, photo: 'assets/hamburger.png' },
-  '120': { code: '120', name: 'Hagelslag', price: 2, photo: 'assets/hagelslag.png' },
-  '121': { code: '121', name: 'Choco Pops', price: 2, photo: 'assets/choco_pops.png' },
+  '119': { code: '119', name: 'Appelsap', price: 2, photo: 'assets/appelsap.png' },
+  '120': { code: '120', name: 'Sap', price: 2, photo: 'assets/sap.png' },
+  '121': { code: '121', name: 'Chocomel', price: 2, photo: 'assets/chocomel.png' },
   '122': { code: '122', name: 'Drinkyoghurt', price: 2, photo: 'assets/drinkyoghurt.png' },
-  '123': { code: '123', name: 'Sap', price: 1, photo: 'assets/sap.png' },
-  '124': { code: '124', name: 'Appelsap', price: 2, photo: 'assets/appelsap.png' },
-  '125': { code: '125', name: 'Chocomel', price: 1, photo: 'assets/chocomel.png' },
-  '126': { code: '126', name: 'Koffiemelk', price: 2, photo: 'assets/koffiemelk.png' },
-  '127': { code: '127', name: 'Cappuccino', price: 2, photo: 'assets/cappuccino.png' },
-  '128': { code: '128', name: 'Thee', price: 2, photo: 'assets/thee.png' },
-  '129': { code: '129', name: 'Potje', price: 2, photo: 'assets/potje.png' },
-  '130': { code: '130', name: 'Kruiden', price: 2, photo: 'assets/kruiden.png' },
-  '131': { code: '131', name: 'Philadelphia', price: 3, photo: 'assets/philadelphia.png' },
-  '132': { code: '132', name: 'Koekjes', price: 1, photo: 'assets/koekjes.png' },
-  '133': { code: '133', name: 'Bonbon', price: 2, photo: 'assets/bonbon.png' },
-  '134': { code: '134', name: 'Chocola', price: 1, photo: 'assets/chocola.png' },
-
+  '123': { code: '123', name: 'Thee', price: 2, photo: 'assets/thee.png' },
+  '124': { code: '124', name: 'Cappuccino', price: 2, photo: 'assets/cappuccino.png' },
+  '125': { code: '125', name: 'Koffiemelk', price: 1, photo: 'assets/koffiemelk.png' },
+  '126': { code: '126', name: 'Hagelslag', price: 1, photo: 'assets/hagelslag.png' },
+  '127': { code: '127', name: 'Choco pops', price: 2, photo: 'assets/choco_pops.png' },
+  '128': { code: '128', name: 'Koekjes', price: 2, photo: 'assets/koekjes.png' },
+  '129': { code: '129', name: 'Bonbon', price: 1, photo: 'assets/bonbon.png' },
+  '130': { code: '130', name: 'Chocola', price: 2, photo: 'assets/chocola.png' },
+  '131': { code: '131', name: 'Hamburger', price: 1, photo: 'assets/hamburger.png' },
+  '132': { code: '132', name: 'Kruiden', price: 1, photo: 'assets/kruiden.png' },
+  '133': { code: '133', name: 'Philadelphia', price: 2, photo: 'assets/philadelphia.png' },
+  '134': { code: '134', name: 'Potje', price: 1, photo: 'assets/potje.png' },
   '135': { code: '135', name: 'Banaan 2', price: 1, photo: 'assets/banaan_2.png' },
   '136': { code: '136', name: 'Appel 2', price: 1, photo: 'assets/appel_2.png' },
   '137': { code: '137', name: 'Sinaasappel 2', price: 1, photo: 'assets/sinaasappel_2.png' },
@@ -60,7 +59,7 @@ const DEFAULT_PRODUCTS = {
   '139': { code: '139', name: 'Boter 3', price: 2, photo: 'assets/boter_3.png' },
   '140': { code: '140', name: 'Melk 2', price: 2, photo: 'assets/melk_2.png' },
   '141': { code: '141', name: 'Ijs 2', price: 2, photo: 'assets/ijs_2.png' },
-  '142': { code: '142', name: 'Soep 2', price: 2, photo: 'assets/soep_2.png' }
+  '142': { code: '142', name: 'Soep 2', price: 1, photo: 'assets/soep_2.png' }
 };
 
 const state = loadState();
