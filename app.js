@@ -52,14 +52,14 @@ const DEFAULT_PRODUCTS = {
   '132': { code: '132', name: 'Kruiden', price: 1, photo: 'assets/kruiden.png' },
   '133': { code: '133', name: 'Philadelphia', price: 2, photo: 'assets/philadelphia.png' },
   '134': { code: '134', name: 'Potje', price: 1, photo: 'assets/potje.png' },
-  '135': { code: '135', name: 'Banaan 2', price: 1, photo: 'assets/banaan_2.png' },
-  '136': { code: '136', name: 'Appel 2', price: 1, photo: 'assets/appel_2.png' },
-  '137': { code: '137', name: 'Sinaasappel 2', price: 1, photo: 'assets/sinaasappel_2.png' },
-  '138': { code: '138', name: 'Boter 2', price: 2, photo: 'assets/boter_2.png' },
-  '139': { code: '139', name: 'Boter 3', price: 2, photo: 'assets/boter_3.png' },
-  '140': { code: '140', name: 'Melk 2', price: 2, photo: 'assets/melk_2.png' },
-  '141': { code: '141', name: 'Ijs 2', price: 2, photo: 'assets/ijs_2.png' },
-  '142': { code: '142', name: 'Soep 2', price: 2, photo: 'assets/soep_2.png' } 
+  '135': { code: '135', name: 'Banaan', price: 1, photo: 'assets/banaan_2.png' },
+  '136': { code: '136', name: 'Appel', price: 1, photo: 'assets/appel_2.png' },
+  '137': { code: '137', name: 'Sinaasappel', price: 1, photo: 'assets/sinaasappel_2.png' },
+  '138': { code: '138', name: 'Boter', price: 2, photo: 'assets/boter_2.png' },
+  '139': { code: '139', name: 'Boter', price: 2, photo: 'assets/boter_3.png' },
+  '140': { code: '140', name: 'Melk', price: 2, photo: 'assets/melk_2.png' },
+  '141': { code: '141', name: 'IJs', price: 2, photo: 'assets/ijs_2.png' },
+  '142': { code: '142', name: 'Soep', price: 1, photo: 'assets/soep_2.png' } 
 };
 
 const state = loadState();
